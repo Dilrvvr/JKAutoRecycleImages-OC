@@ -1,10 +1,10 @@
 # JKAutoRecycleImages-OC
-###自动自动无限循环轮播图-OC
+###无限轮播图-OC
 ###点击查看[Swift版](https://github.com/Jacky-An/JKAutoRecycleImages-Swift/ "Title") 
 ***
 ![image](https://github.com/Jacky-An/JKAutoRecycleImages-OC/raw/master/introductionimages/introduction.gif)
 ***
-* 之前的实现思路都是在别人的博客中看到的，也下载了他们的demo。无一例外都是先创建好左中右三个imageView，然后切换图片。
+* 之前的实现思路都是在别人的博客中看到的，也下载了demo。无一例外都是先创建好左中右三个imageView，然后切换图片。
 
 * 实际体验中发现该方案存在一个问题：<font color=#DC143C size=3 face="黑体">随意方向拖动一点即切换下一张</font>。在下载的demo中都有这样的问题。
 
