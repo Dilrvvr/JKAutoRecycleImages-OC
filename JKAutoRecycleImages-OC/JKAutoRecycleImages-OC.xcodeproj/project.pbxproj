@@ -1,0 +1,556 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		506FBF4C1D7DD6CA00416A99 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF4B1D7DD6CA00416A99 /* main.m */; };
+		506FBF4F1D7DD6CA00416A99 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF4E1D7DD6CA00416A99 /* AppDelegate.m */; };
+		506FBF521D7DD6CA00416A99 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF511D7DD6CA00416A99 /* ViewController.m */; };
+		506FBF551D7DD6CA00416A99 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF531D7DD6CA00416A99 /* Main.storyboard */; };
+		506FBF571D7DD6CA00416A99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF561D7DD6CA00416A99 /* Assets.xcassets */; };
+		506FBF5A1D7DD6CA00416A99 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF581D7DD6CA00416A99 /* LaunchScreen.storyboard */; };
+		506FBF651D7DD6CA00416A99 /* JKAutoRecycleImages_OCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF641D7DD6CA00416A99 /* JKAutoRecycleImages_OCTests.m */; };
+		506FBF701D7DD6CA00416A99 /* JKAutoRecycleImages_OCUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF6F1D7DD6CA00416A99 /* JKAutoRecycleImages_OCUITests.m */; };
+		506FBF7F1D7DD6D900416A99 /* JKRecycleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF7E1D7DD6D900416A99 /* JKRecycleView.m */; };
+		506FBF861D7DD81400416A99 /* kenan01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF811D7DD81400416A99 /* kenan01.jpg */; };
+		506FBF871D7DD81400416A99 /* kenan02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF821D7DD81400416A99 /* kenan02.jpg */; };
+		506FBF881D7DD81400416A99 /* kenan03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF831D7DD81400416A99 /* kenan03.jpg */; };
+		506FBF891D7DD81400416A99 /* kenan04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF841D7DD81400416A99 /* kenan04.jpg */; };
+		506FBF8A1D7DD81400416A99 /* kenan05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF851D7DD81400416A99 /* kenan05.jpg */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		506FBF611D7DD6CA00416A99 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 506FBF3F1D7DD6CA00416A99 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 506FBF461D7DD6CA00416A99;
+			remoteInfo = "JKAutoRecycleImages-OC";
+		};
+		506FBF6C1D7DD6CA00416A99 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 506FBF3F1D7DD6CA00416A99 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 506FBF461D7DD6CA00416A99;
+			remoteInfo = "JKAutoRecycleImages-OC";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		506FBF471D7DD6CA00416A99 /* JKAutoRecycleImages-OC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JKAutoRecycleImages-OC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		506FBF4B1D7DD6CA00416A99 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		506FBF4D1D7DD6CA00416A99 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		506FBF4E1D7DD6CA00416A99 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		506FBF501D7DD6CA00416A99 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		506FBF511D7DD6CA00416A99 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		506FBF541D7DD6CA00416A99 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		506FBF561D7DD6CA00416A99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		506FBF591D7DD6CA00416A99 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		506FBF5B1D7DD6CA00416A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		506FBF601D7DD6CA00416A99 /* JKAutoRecycleImages-OCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "JKAutoRecycleImages-OCTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		506FBF641D7DD6CA00416A99 /* JKAutoRecycleImages_OCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKAutoRecycleImages_OCTests.m; sourceTree = "<group>"; };
+		506FBF661D7DD6CA00416A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		506FBF6B1D7DD6CA00416A99 /* JKAutoRecycleImages-OCUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "JKAutoRecycleImages-OCUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		506FBF6F1D7DD6CA00416A99 /* JKAutoRecycleImages_OCUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKAutoRecycleImages_OCUITests.m; sourceTree = "<group>"; };
+		506FBF711D7DD6CA00416A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		506FBF7D1D7DD6D900416A99 /* JKRecycleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKRecycleView.h; sourceTree = "<group>"; };
+		506FBF7E1D7DD6D900416A99 /* JKRecycleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKRecycleView.m; sourceTree = "<group>"; };
+		506FBF811D7DD81400416A99 /* kenan01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kenan01.jpg; sourceTree = "<group>"; };
+		506FBF821D7DD81400416A99 /* kenan02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kenan02.jpg; sourceTree = "<group>"; };
+		506FBF831D7DD81400416A99 /* kenan03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kenan03.jpg; sourceTree = "<group>"; };
+		506FBF841D7DD81400416A99 /* kenan04.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kenan04.jpg; sourceTree = "<group>"; };
+		506FBF851D7DD81400416A99 /* kenan05.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kenan05.jpg; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		506FBF441D7DD6CA00416A99 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506FBF5D1D7DD6CA00416A99 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506FBF681D7DD6CA00416A99 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		506FBF3E1D7DD6CA00416A99 = {
+			isa = PBXGroup;
+			children = (
+				506FBF491D7DD6CA00416A99 /* JKAutoRecycleImages-OC */,
+				506FBF631D7DD6CA00416A99 /* JKAutoRecycleImages-OCTests */,
+				506FBF6E1D7DD6CA00416A99 /* JKAutoRecycleImages-OCUITests */,
+				506FBF481D7DD6CA00416A99 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		506FBF481D7DD6CA00416A99 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				506FBF471D7DD6CA00416A99 /* JKAutoRecycleImages-OC.app */,
+				506FBF601D7DD6CA00416A99 /* JKAutoRecycleImages-OCTests.xctest */,
+				506FBF6B1D7DD6CA00416A99 /* JKAutoRecycleImages-OCUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		506FBF491D7DD6CA00416A99 /* JKAutoRecycleImages-OC */ = {
+			isa = PBXGroup;
+			children = (
+				506FBF801D7DD80500416A99 /* REsources */,
+				506FBF4D1D7DD6CA00416A99 /* AppDelegate.h */,
+				506FBF4E1D7DD6CA00416A99 /* AppDelegate.m */,
+				506FBF501D7DD6CA00416A99 /* ViewController.h */,
+				506FBF511D7DD6CA00416A99 /* ViewController.m */,
+				506FBF7D1D7DD6D900416A99 /* JKRecycleView.h */,
+				506FBF7E1D7DD6D900416A99 /* JKRecycleView.m */,
+				506FBF531D7DD6CA00416A99 /* Main.storyboard */,
+				506FBF561D7DD6CA00416A99 /* Assets.xcassets */,
+				506FBF581D7DD6CA00416A99 /* LaunchScreen.storyboard */,
+				506FBF5B1D7DD6CA00416A99 /* Info.plist */,
+				506FBF4A1D7DD6CA00416A99 /* Supporting Files */,
+			);
+			path = "JKAutoRecycleImages-OC";
+			sourceTree = "<group>";
+		};
+		506FBF4A1D7DD6CA00416A99 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				506FBF4B1D7DD6CA00416A99 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		506FBF631D7DD6CA00416A99 /* JKAutoRecycleImages-OCTests */ = {
+			isa = PBXGroup;
+			children = (
+				506FBF641D7DD6CA00416A99 /* JKAutoRecycleImages_OCTests.m */,
+				506FBF661D7DD6CA00416A99 /* Info.plist */,
+			);
+			path = "JKAutoRecycleImages-OCTests";
+			sourceTree = "<group>";
+		};
+		506FBF6E1D7DD6CA00416A99 /* JKAutoRecycleImages-OCUITests */ = {
+			isa = PBXGroup;
+			children = (
+				506FBF6F1D7DD6CA00416A99 /* JKAutoRecycleImages_OCUITests.m */,
+				506FBF711D7DD6CA00416A99 /* Info.plist */,
+			);
+			path = "JKAutoRecycleImages-OCUITests";
+			sourceTree = "<group>";
+		};
+		506FBF801D7DD80500416A99 /* REsources */ = {
+			isa = PBXGroup;
+			children = (
+				506FBF811D7DD81400416A99 /* kenan01.jpg */,
+				506FBF821D7DD81400416A99 /* kenan02.jpg */,
+				506FBF831D7DD81400416A99 /* kenan03.jpg */,
+				506FBF841D7DD81400416A99 /* kenan04.jpg */,
+				506FBF851D7DD81400416A99 /* kenan05.jpg */,
+			);
+			name = REsources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		506FBF461D7DD6CA00416A99 /* JKAutoRecycleImages-OC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 506FBF741D7DD6CA00416A99 /* Build configuration list for PBXNativeTarget "JKAutoRecycleImages-OC" */;
+			buildPhases = (
+				506FBF431D7DD6CA00416A99 /* Sources */,
+				506FBF441D7DD6CA00416A99 /* Frameworks */,
+				506FBF451D7DD6CA00416A99 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "JKAutoRecycleImages-OC";
+			productName = "JKAutoRecycleImages-OC";
+			productReference = 506FBF471D7DD6CA00416A99 /* JKAutoRecycleImages-OC.app */;
+			productType = "com.apple.product-type.application";
+		};
+		506FBF5F1D7DD6CA00416A99 /* JKAutoRecycleImages-OCTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 506FBF771D7DD6CA00416A99 /* Build configuration list for PBXNativeTarget "JKAutoRecycleImages-OCTests" */;
+			buildPhases = (
+				506FBF5C1D7DD6CA00416A99 /* Sources */,
+				506FBF5D1D7DD6CA00416A99 /* Frameworks */,
+				506FBF5E1D7DD6CA00416A99 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				506FBF621D7DD6CA00416A99 /* PBXTargetDependency */,
+			);
+			name = "JKAutoRecycleImages-OCTests";
+			productName = "JKAutoRecycleImages-OCTests";
+			productReference = 506FBF601D7DD6CA00416A99 /* JKAutoRecycleImages-OCTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		506FBF6A1D7DD6CA00416A99 /* JKAutoRecycleImages-OCUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 506FBF7A1D7DD6CA00416A99 /* Build configuration list for PBXNativeTarget "JKAutoRecycleImages-OCUITests" */;
+			buildPhases = (
+				506FBF671D7DD6CA00416A99 /* Sources */,
+				506FBF681D7DD6CA00416A99 /* Frameworks */,
+				506FBF691D7DD6CA00416A99 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				506FBF6D1D7DD6CA00416A99 /* PBXTargetDependency */,
+			);
+			name = "JKAutoRecycleImages-OCUITests";
+			productName = "JKAutoRecycleImages-OCUITests";
+			productReference = 506FBF6B1D7DD6CA00416A99 /* JKAutoRecycleImages-OCUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		506FBF3F1D7DD6CA00416A99 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = albert;
+				TargetAttributes = {
+					506FBF461D7DD6CA00416A99 = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = R9ETGYBWPU;
+					};
+					506FBF5F1D7DD6CA00416A99 = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = R9ETGYBWPU;
+						TestTargetID = 506FBF461D7DD6CA00416A99;
+					};
+					506FBF6A1D7DD6CA00416A99 = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = R9ETGYBWPU;
+						TestTargetID = 506FBF461D7DD6CA00416A99;
+					};
+				};
+			};
+			buildConfigurationList = 506FBF421D7DD6CA00416A99 /* Build configuration list for PBXProject "JKAutoRecycleImages-OC" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 506FBF3E1D7DD6CA00416A99;
+			productRefGroup = 506FBF481D7DD6CA00416A99 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				506FBF461D7DD6CA00416A99 /* JKAutoRecycleImages-OC */,
+				506FBF5F1D7DD6CA00416A99 /* JKAutoRecycleImages-OCTests */,
+				506FBF6A1D7DD6CA00416A99 /* JKAutoRecycleImages-OCUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		506FBF451D7DD6CA00416A99 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				506FBF861D7DD81400416A99 /* kenan01.jpg in Resources */,
+				506FBF5A1D7DD6CA00416A99 /* LaunchScreen.storyboard in Resources */,
+				506FBF881D7DD81400416A99 /* kenan03.jpg in Resources */,
+				506FBF571D7DD6CA00416A99 /* Assets.xcassets in Resources */,
+				506FBF8A1D7DD81400416A99 /* kenan05.jpg in Resources */,
+				506FBF551D7DD6CA00416A99 /* Main.storyboard in Resources */,
+				506FBF891D7DD81400416A99 /* kenan04.jpg in Resources */,
+				506FBF871D7DD81400416A99 /* kenan02.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506FBF5E1D7DD6CA00416A99 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506FBF691D7DD6CA00416A99 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		506FBF431D7DD6CA00416A99 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				506FBF521D7DD6CA00416A99 /* ViewController.m in Sources */,
+				506FBF7F1D7DD6D900416A99 /* JKRecycleView.m in Sources */,
+				506FBF4F1D7DD6CA00416A99 /* AppDelegate.m in Sources */,
+				506FBF4C1D7DD6CA00416A99 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506FBF5C1D7DD6CA00416A99 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				506FBF651D7DD6CA00416A99 /* JKAutoRecycleImages_OCTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		506FBF671D7DD6CA00416A99 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				506FBF701D7DD6CA00416A99 /* JKAutoRecycleImages_OCUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		506FBF621D7DD6CA00416A99 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 506FBF461D7DD6CA00416A99 /* JKAutoRecycleImages-OC */;
+			targetProxy = 506FBF611D7DD6CA00416A99 /* PBXContainerItemProxy */;
+		};
+		506FBF6D1D7DD6CA00416A99 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 506FBF461D7DD6CA00416A99 /* JKAutoRecycleImages-OC */;
+			targetProxy = 506FBF6C1D7DD6CA00416A99 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		506FBF531D7DD6CA00416A99 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				506FBF541D7DD6CA00416A99 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		506FBF581D7DD6CA00416A99 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				506FBF591D7DD6CA00416A99 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		506FBF721D7DD6CA00416A99 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		506FBF731D7DD6CA00416A99 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		506FBF751D7DD6CA00416A99 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "JKAutoRecycleImages-OC/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jkdev123cool.JKAutoRecycleImages-OC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		506FBF761D7DD6CA00416A99 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "JKAutoRecycleImages-OC/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jkdev123cool.JKAutoRecycleImages-OC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		506FBF781D7DD6CA00416A99 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "JKAutoRecycleImages-OCTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jkdev123cool.JKAutoRecycleImages-OCTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JKAutoRecycleImages-OC.app/JKAutoRecycleImages-OC";
+			};
+			name = Debug;
+		};
+		506FBF791D7DD6CA00416A99 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "JKAutoRecycleImages-OCTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jkdev123cool.JKAutoRecycleImages-OCTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JKAutoRecycleImages-OC.app/JKAutoRecycleImages-OC";
+			};
+			name = Release;
+		};
+		506FBF7B1D7DD6CA00416A99 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "JKAutoRecycleImages-OCUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jkdev123cool.JKAutoRecycleImages-OCUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "JKAutoRecycleImages-OC";
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		506FBF7C1D7DD6CA00416A99 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "JKAutoRecycleImages-OCUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "jkdev123cool.JKAutoRecycleImages-OCUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "JKAutoRecycleImages-OC";
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		506FBF421D7DD6CA00416A99 /* Build configuration list for PBXProject "JKAutoRecycleImages-OC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				506FBF721D7DD6CA00416A99 /* Debug */,
+				506FBF731D7DD6CA00416A99 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		506FBF741D7DD6CA00416A99 /* Build configuration list for PBXNativeTarget "JKAutoRecycleImages-OC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				506FBF751D7DD6CA00416A99 /* Debug */,
+				506FBF761D7DD6CA00416A99 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		506FBF771D7DD6CA00416A99 /* Build configuration list for PBXNativeTarget "JKAutoRecycleImages-OCTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				506FBF781D7DD6CA00416A99 /* Debug */,
+				506FBF791D7DD6CA00416A99 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		506FBF7A1D7DD6CA00416A99 /* Build configuration list for PBXNativeTarget "JKAutoRecycleImages-OCUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				506FBF7B1D7DD6CA00416A99 /* Debug */,
+				506FBF7C1D7DD6CA00416A99 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 506FBF3F1D7DD6CA00416A99 /* Project object */;
+}
