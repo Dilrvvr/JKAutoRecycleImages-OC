@@ -146,6 +146,7 @@
     [self.recycleImageViews addObject:self.allImageViews[nextIndex]];
     
     // 中间label赋值
+    if (self.allTitleLabels.count < self.currentIndex + 1) return;
     self.middleLabel = self.allTitleLabels[self.currentIndex];
 }
 
@@ -264,6 +265,11 @@
         imageView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:imageNames[i] ofType:@"jpg"]];
         imageView.frame = CGRectMake(0, 0, _scrollView.frame.size.width, _scrollView.frame.size.height);
         
+        // 将控件添加到数组
+        [self.allImageViews addObject:imageView];
+        
+        if (titles == nil || titles.count < imageNames.count) continue;
+        
         // 创建titleLabel
         UILabel *titleLabel = [[UILabel alloc] init];
         [titleLabel sizeToFit];
@@ -276,14 +282,8 @@
         titleLabel.textColor = [UIColor whiteColor];
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
-        if (titles != nil && titles.count >= imageNames.count) {
-            titleLabel.text = titles[i];
-        }
         titleLabel.text = titles[i];
         [imageView addSubview:titleLabel];
-        
-        // 将控件添加到数组
-        [self.allImageViews addObject:imageView];
         [self.allTitleLabels addObject:titleLabel];
     }
     
