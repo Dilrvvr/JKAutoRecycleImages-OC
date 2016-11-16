@@ -292,9 +292,6 @@
     // 更新要进行循环的三张图片
     [self reloadRecycleImageViews];
     
-    // 不自动循环
-    if (!self.isAutoRecycle) return;
-    
     // 开始自动循环
     [self addTimer];
 }
