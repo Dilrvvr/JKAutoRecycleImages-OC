@@ -22,6 +22,9 @@
 /** 自动滚动的时间间隔（单位为s）默认3s */
 @property (nonatomic, assign) NSTimeInterval autoRecycleInterval;
 
+/** 是否自动开始循环 默认YES */
+@property (nonatomic, assign) BOOL isAutoRecycle;
+
 /** 代理 */
 @property (nonatomic, weak) id<JKRecycleViewDelegate> delegate;
 

@@ -110,6 +110,7 @@
 - (void)initialization {
     // 初始化数据
     _autoRecycleInterval = 3;
+    _isAutoRecycle = YES;
     
     // 初始化scrollView
     [self scrollView];
@@ -184,6 +185,7 @@
 
 #pragma mark - 添加定时器
 - (void)addTimer {
+    if (!self.isAutoRecycle) return;
     if (_pagesCount == 1) return;
     if (self.timer) return;
     self.timer = [NSTimer timerWithTimeInterval:_autoRecycleInterval target:self selector:@selector(startAutoRecycle) userInfo:nil repeats:YES];
@@ -290,8 +292,31 @@
     // 更新要进行循环的三张图片
     [self reloadRecycleImageViews];
     
+    // 不自动循环
+    if (!self.isAutoRecycle) return;
+    
     // 开始自动循环
     [self addTimer];
+}
+
+- (void)setAutoRecycleInterval:(NSTimeInterval)autoRecycleInterval{
+    _autoRecycleInterval = autoRecycleInterval;
+    
+    [self removeTimer];
+    
+    [self addTimer];
+}
+
+- (void)setIsAutoRecycle:(BOOL)isAutoRecycle{
+    _isAutoRecycle = isAutoRecycle;
+    
+    [self removeTimer];
+    
+    [self addTimer];
+}
+
+- (void)dealloc{
+    [self removeTimer];
 }
 
 #pragma mark - 点击了中间的ImageView即当前显示的ImageView
