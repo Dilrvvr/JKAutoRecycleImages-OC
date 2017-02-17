@@ -235,6 +235,7 @@
 
 #pragma mark - setter方法
 - (void)setImageNames:(NSArray *)imageNames titles:(NSArray *)titles {
+    self.isDataAdded = NO;
     // 防止重复赋值
     if (imageNames.count == self.imageNames.count) {
         self.isDataAdded = YES;
