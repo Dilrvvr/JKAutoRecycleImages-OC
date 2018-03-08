@@ -17,9 +17,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.recycleView.delegate = self;
     
-    [self.recycleView setImageNames:@[@"kenan01", @"kenan02", @"kenan03", @"kenan04", @"kenan05"] titles:@[@"kenan01-柯兰", @"kenan02-柯哀", @"kenan03-柯兰", @"kenan04-新兰", @"kenan05-全家福"]];
+    self.recycleView.delegate = self;
+    [self.recycleView setImageUrls:@[@"kenan01.jpg", @"kenan02.jpg", @"kenan03.jpg", @"kenan04.jpg", @"kenan05.jpg"] titles:@[@"kenan01-柯兰", @"kenan02-柯哀", @"kenan03-柯兰", @"kenan04-新兰", @"kenan05-全家福"] otherDataDicts:nil];
 }
 
 #pragma mark - 按钮点击
@@ -32,7 +32,7 @@
 }
 
 #pragma mark - <JKRecycleViewDelegate>
-- (void)recycleView:(JKRecycleView *)recycleView didClickCurrentImageViewWithIndex:(int)index{
+- (void)recycleView:(JKRecycleView *)recycleView didClickImageWithIndex:(int)index otherDataDict:(NSDictionary *)otherDataDict{
     NSString *message = [NSString stringWithFormat:@"点击了第%d张图片", index + 1];
     
     UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:(UIAlertControllerStyleAlert)];
