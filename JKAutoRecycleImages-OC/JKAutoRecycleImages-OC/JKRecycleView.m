@@ -49,10 +49,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     _pagesCount = dataSource.count;
     self.pageControl.numberOfPages = _pagesCount;
     
-    for (NSInteger i = 0; i < _pagesCount; i++) {
-        
-        [self.dataSourceArr addObject:dataSource[i]];
-    }
+    [self.dataSourceArr addObjectsFromArray:dataSource];
     
     if (_pagesCount <= 1) {
         

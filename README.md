@@ -1,6 +1,6 @@
 # JKAutoRecycleImages-OC
 ###无限轮播图-OC
-###点击查看[Swift版](https://github.com/Jacky-An/JKAutoRecycleImages-Swift/ "Title") 
+###点击查看[Swift版-UIScrollView-待更新](https://github.com/Jacky-An/JKAutoRecycleImages-Swift/ "Title") 
 ***
 ![image](https://github.com/Jacky-An/JKAutoRecycleImages-OC/raw/master/introductionimages/introduction.gif)
 ***
@@ -8,12 +8,11 @@
 
 * 实际体验中发现该方案存在一个问题：<font color=#DC143C size=3 face="黑体">随意方向拖动一点即切换下一张</font>。在下载的demo中都有这样的问题。
 
-* 之后稍做了一点优化，解决了拖动一点即切换下一张的问题，但是又出现了新的问题：<font color=#DC143C size=3 face="黑体">快速滑动时最多能滑动两张，再下一张会变成空白，划不动，且pageControl的索引会错乱</font>。虽然过一会自动循环会恢复正常，但是不能快速滑动，真的不完美！
-
-* 于是开始漫长时间的折腾。终于试出了<font color=#DC143C size=3 face="黑体">较为完美的解决办法</font>。因为不知道这种方案的内存和性能怎样，所以称“较为完美”。
+* 之前的实现思路是使用UIScrollView。
 	* 1、根据外界传入的数据先创建好所有的imageView，保存到数组中。
 	* 2、每次滚动后根据算好的索引，从数组中取出当前左中右三个imageView，添加到scrollView上。注意之前先清空scrollView子控件。
-	
-###### 对应的Swift版也已经写出来了，欢迎批评指正。
-	
-###### 如果有更好的实现方案，希望大神能不吝分享。
+    
+* 现在已经改为使用UICollectionView实现！
+    * 1、在正常数组的前后分别插入最后一个数据和第一个数据，此时数组总数+2。
+    * 2、当滚动总数组的最后一个时，自动调整到总数组的第二个。
+    * 3、当滚动总数组的第一个时，自动调整到总数组的倒数第二个。
