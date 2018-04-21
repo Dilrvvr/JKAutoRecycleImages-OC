@@ -114,7 +114,7 @@
 		506FBF491D7DD6CA00416A99 /* JKAutoRecycleImages-OC */ = {
 			isa = PBXGroup;
 			children = (
-				506FBF801D7DD80500416A99 /* REsources */,
+				506FBF801D7DD80500416A99 /* Resources */,
 				506FBF4D1D7DD6CA00416A99 /* AppDelegate.h */,
 				506FBF4E1D7DD6CA00416A99 /* AppDelegate.m */,
 				506FBF501D7DD6CA00416A99 /* ViewController.h */,
@@ -156,7 +156,7 @@
 			path = "JKAutoRecycleImages-OCUITests";
 			sourceTree = "<group>";
 		};
-		506FBF801D7DD80500416A99 /* REsources */ = {
+		506FBF801D7DD80500416A99 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				506FBF811D7DD81400416A99 /* kenan01.jpg */,
@@ -165,7 +165,7 @@
 				506FBF841D7DD81400416A99 /* kenan04.jpg */,
 				506FBF851D7DD81400416A99 /* kenan05.jpg */,
 			);
-			name = REsources;
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

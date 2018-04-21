@@ -8,14 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
+/** 图片 */
+static NSString * const JKRecycleImageUrlKey = @"JKRecycleImageUrlKey";
+
+/** 标题 */
+static NSString * const JKRecycleTitleKey = @"JKRecycleTitleKey";
+
+/** 其他数据 */
+static NSString * const JKRecycleOtherDictKey = @"JKRecycleOtherDictKey";
+
 @class JKRecycleView;
 
 @protocol JKRecycleViewDelegate <NSObject>
 
 @optional
-/** 点击了轮播图 */
-- (void)recycleView:(JKRecycleView *)recycleView didClickImageWithIndex:(int)index otherDataDict:(NSDictionary *)otherDataDict;
 
+/** 点击了轮播图 */
+- (void)recycleView:(JKRecycleView *)recycleView didClickImageWithDict:(NSDictionary *)dict;
 @end
 
 @interface JKRecycleView : UIView
@@ -29,6 +38,9 @@
 /** contentView */
 @property (nonatomic, weak, readonly) UIView *contentView;
 
+/** flowlayout */
+@property (nonatomic, strong, readonly) UICollectionViewFlowLayout *flowlayout;
+
 /** pageControl */
 @property (nonatomic, strong) UIPageControl *pageControl;
 
@@ -39,16 +51,36 @@
 @property (nonatomic, weak) id<JKRecycleViewDelegate> delegate;
 
 /** 监听图片点击的block */
-@property (nonatomic, copy) void (^imageClickBlock)(int index, NSDictionary *otherDataDict);
+@property (nonatomic, copy) void (^imageClickBlock)(NSDictionary *dict);
 
 + (instancetype)recycleViewWithFrame:(CGRect)frame;
 
-/** 设置数据 */
-- (void)setImageUrls:(NSArray *)imageUrls titles:(NSArray *)titles otherDataDicts:(NSArray <NSDictionary *> *)otherDataDicts;
+/**
+ * 设置数据
+ * 数组中每个元素应是NSDictionary类型
+ * NSDictionary必须有一个图片urlkey JKRecycleImageUrlKey
+ * JKRecycleTitleKey和JKRecycleOtherDictKey可有可无
+ */
+- (void)setDataSource:(NSArray <NSDictionary *> *)dataSource;
 
 /** 添加定时器 */
 - (void)addTimer;
 
 /** 移除定时器 */
 - (void)removeTimer;
+@end
+
+
+
+#pragma mark - -------------cell-------------
+
+@interface JKRecycleCell : UICollectionViewCell
+
+/** dict */
+@property (nonatomic, copy, readonly) NSDictionary *dict;
+
+/** selectImageBlock */
+@property (nonatomic, copy) void (^selectImageBlock)(NSDictionary *dict);
+
+- (void)bindDict:(NSDictionary *)dict;
 @end

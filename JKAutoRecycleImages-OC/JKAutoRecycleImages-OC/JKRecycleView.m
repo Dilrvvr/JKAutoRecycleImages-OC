@@ -8,163 +8,145 @@
 
 #import "JKRecycleView.h"
 
-@interface JKRecycleView () <UIScrollViewDelegate>
+static NSString * const JKIndexKey = @"JKIndexKey";
+
+@interface JKRecycleView () <UICollectionViewDataSource, UICollectionViewDelegate>
 {
     UIView *_contentView;
     UIPageControl *_pageControl;
+    NSInteger _pagesCount;
 }
 
-/** scrollView */
-@property (nonatomic, strong) UIScrollView *scrollView;
+/** collectionView */
+@property (nonatomic, weak) UICollectionView *collectionView;
 
-/** 中间的label */
-@property (nonatomic, weak) UILabel *middleLabel;
-
-/** 提示的label */
-@property (nonatomic, weak) UILabel *tipLabel;
-
-/** 定时器 */
+/** timer */
 @property (nonatomic, strong) NSTimer *timer;
 
-/** 当前的数据 */
-@property (nonatomic, strong) NSArray *imageUrls;
-
-/** 其它数据 */
-@property (nonatomic, strong) NSMutableArray *otherDataDicts;
-
-/** 图片容器view数组 */
-@property (nonatomic, strong) NSMutableArray *imageContainerViews;
-
-/** 要循环的imageView */
-@property (nonatomic, strong) NSMutableArray *recycleImageViews;
-
-/** 所有的imageView */
-@property (nonatomic, strong) NSMutableArray *allImageViews;
-
-/** 所有的label */
-@property (nonatomic, strong) NSMutableArray *allTitleLabels;
-
-/** 当前的索引 */
-@property (nonatomic, assign) int currentIndex;
-
-/** 当前的图片 */
-@property (nonatomic, weak) UIImageView *currentImageView;
-
-/** 只有2张图片时，额外的图片 */
-@property (nonatomic, strong) UIImageView *thirdImageView;
-
-/** 图片页数 */
-@property (nonatomic, assign) int pagesCount;
-
-/** 数据是否已经添加 */
-@property (nonatomic, assign) BOOL isDataAdded;
+/** dataSourceArr */
+@property (nonatomic, strong) NSMutableArray *dataSourceArr;
 @end
 
 @implementation JKRecycleView
 
 + (instancetype)recycleViewWithFrame:(CGRect)frame{
     
-    JKRecycleView *rv = [[JKRecycleView alloc] initWithFrame:frame];
+    JKRecycleView *recycleView = [[JKRecycleView alloc] initWithFrame:frame];
     
-    return rv;
+    recycleView.flowlayout.itemSize = frame.size;
+    
+    return recycleView;
+}
+
+/**
+ * 设置数据
+ * 数组中每个元素应是NSDictionary类型
+ * NSDictionary必须有一个图片urlkey JKRecycleImageUrlKey
+ * JKRecycleTitleKey和JKRecycleOtherDictKey可有可无
+ */
+- (void)setDataSource:(NSArray <NSDictionary *> *)dataSource{
+    
+    _pagesCount = dataSource.count;
+    self.pageControl.numberOfPages = _pagesCount;
+    
+    for (NSInteger i = 0; i < _pagesCount; i++) {
+        
+        [self.dataSourceArr addObject:dataSource[i]];
+    }
+    
+    if (_pagesCount <= 1) {
+        
+        self.collectionView.scrollEnabled = NO;
+        
+        [self.collectionView reloadData];
+        
+        return;
+    }
+    
+    [self.dataSourceArr addObject:[dataSource.firstObject copy]];
+    
+    [self.dataSourceArr insertObject:[dataSource.lastObject copy] atIndex:0];
+    
+    [self.collectionView performBatchUpdates:^{
+        
+        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+        
+    } completion:^(BOOL finished) {
+        
+        [self.collectionView setContentOffset:CGPointMake(self.collectionView.bounds.size.width, 0)];
+        [self addTimer];
+    }];
 }
 
 #pragma mark - 懒加载
+
 - (UIView *)contentView{
     if (!_contentView) {
         UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
         [self insertSubview:contentView atIndex:0];
+        
+        //        contentView.translatesAutoresizingMaskIntoConstraints = NO;
+        //        NSArray *contentViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[contentView]-0-|" options:0 metrics:nil views:@{@"contentView" : contentView}];
+        //        [self addConstraints:contentViewCons1];
+        //
+        //        NSArray *contentViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[contentView]-0-|" options:0 metrics:nil views:@{@"contentView" : contentView}];
+        //        [self addConstraints:contentViewCons2];
+        
         _contentView = contentView;
     }
     return _contentView;
 }
 
-- (UIScrollView *)scrollView {
-    if (!_scrollView) {
-        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+- (UICollectionView *)collectionView{
+    if (!_collectionView) {
         
-        scrollView.scrollsToTop = NO;
-        scrollView.scrollEnabled = NO;
-        scrollView.delegate = self;
-        scrollView.backgroundColor = [UIColor clearColor];
-        scrollView.pagingEnabled = YES;
-        scrollView.contentSize = CGSizeMake(3 * self.frame.size.width, 0);
-        scrollView.showsVerticalScrollIndicator = NO;
-        scrollView.showsHorizontalScrollIndicator = NO;
+        _flowlayout = [[UICollectionViewFlowLayout alloc] init];
+        _flowlayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        _flowlayout.minimumLineSpacing = 0;
+        _flowlayout.minimumInteritemSpacing = 0;
         
-        [self.contentView insertSubview:scrollView atIndex:0];
+        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_flowlayout];
+        collectionView.backgroundColor = nil;
+        collectionView.scrollsToTop = NO;
+        collectionView.dataSource = self;
+        collectionView.delegate = self;
+        collectionView.pagingEnabled = YES;
+        collectionView.showsHorizontalScrollIndicator = NO;
+        collectionView.showsVerticalScrollIndicator = NO;
+        collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
+        [self.contentView insertSubview:collectionView atIndex:0];
         
-        for (UIView *vv in scrollView.subviews) {
-            [vv removeFromSuperview];
-        }
+        [collectionView registerClass:[JKRecycleCell class] forCellWithReuseIdentifier:NSStringFromClass([JKRecycleCell class])];
         
-        //        scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-        //        [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        //            make.left.right.top.bottom.mas_equalTo(0);
-        //        }];
+        //        collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+        //        NSArray *collectionViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
+        //        [self addConstraints:collectionViewCons1];
+        //
+        //        NSArray *collectionViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
+        //        [self addConstraints:collectionViewCons2];
         
-        _scrollView = scrollView;
+        _collectionView = collectionView;
     }
-    return _scrollView;
+    return _collectionView;
 }
 
 - (UIPageControl *)pageControl {
     if (!_pageControl) {
         UIPageControl *pageControl = [[UIPageControl alloc] init];
-        pageControl.frame = CGRectMake(0, self.bounds.size.height - 20, self.bounds.size.width, 20);
         pageControl.userInteractionEnabled = NO;
-//        pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-//        pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
-        [self addSubview:pageControl];
+        //        pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+        //        pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+        [self.contentView addSubview:pageControl];
         _pageControl = pageControl;
     }
     return _pageControl;
 }
 
-- (NSMutableArray *)recycleImageViews {
-    if (!_recycleImageViews) {
-        _recycleImageViews = [NSMutableArray array];
+- (NSMutableArray *)dataSourceArr{
+    if (!_dataSourceArr) {
+        _dataSourceArr = [NSMutableArray array];
     }
-    return _recycleImageViews;
-}
-
-- (NSMutableArray *)allImageViews {
-    if (!_allImageViews) {
-        _allImageViews = [NSMutableArray array];
-    }
-    return _allImageViews;
-}
-
-- (NSMutableArray *)allTitleLabels {
-    if (!_allTitleLabels) {
-        _allTitleLabels = [NSMutableArray array];
-    }
-    return _allTitleLabels;
-}
-
-- (NSMutableArray *)otherDataDicts{
-    if (!_otherDataDicts) {
-        _otherDataDicts = [NSMutableArray array];
-    }
-    return _otherDataDicts;
-}
-
-- (UIImageView *)thirdImageView{
-    if (!_thirdImageView) {
-        _thirdImageView = [[UIImageView alloc] initWithFrame:self.scrollView.bounds];
-    }
-    return _thirdImageView;
-}
-
-- (NSMutableArray *)imageContainerViews{
-    if (!_imageContainerViews) {
-        _imageContainerViews = [NSMutableArray array];
-        for (NSInteger i = 0; i < 3; i++) {
-            UIView *containerView = [[UIView alloc] init];
-            [_imageContainerViews addObject:containerView];
-        }
-    }
-    return _imageContainerViews;
+    return _dataSourceArr;
 }
 
 #pragma mark - 初始化
@@ -193,13 +175,10 @@
     _autoRecycle = YES;
     
     // 初始化scrollView
-    [self scrollView];
+    [self collectionView];
     
     // 初始化pageControl
     [self pageControl];
-    
-    // 添加手势
-    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickMiddleImageView)]];
     
     //    UILabel *tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
     //    tipLabel.text = @"此处应有图片";
@@ -221,112 +200,13 @@
 //    [self addTimer];
 //}
 
-#pragma mark - 传入一个index来获取下一个正确的index
-- (int)getVaildNextPageIndexWithIndex:(int)index {
+- (void)layoutSubviews{
+    [super layoutSubviews];
     
-    if (index == -1) {
-        
-        return _pagesCount - 1;
-        
-    } else if (index == _pagesCount) {
-        
-        return 0;
-    }
-    
-    return index;
-}
-
-#pragma mark - 更新recycleImageViews
-- (void)updateRecycleImageViews {
-    
-    if (self.allImageViews.count <= 0) {
-        return;
-    }
-    
-    // 先清空数组
-    [self.recycleImageViews removeAllObjects];
-    
-    // 计算好上一张和下一张图片的索引
-    int previousIndex = [self getVaildNextPageIndexWithIndex:self.currentIndex - 1];
-    int nextIndex = [self getVaildNextPageIndexWithIndex:self.currentIndex + 1];
-    
-    // 按顺序添加要循环的三张图片
-    if (_pagesCount == 2) {
-        
-        [self.recycleImageViews addObject:self.thirdImageView];
-        
-        // TODO: ---只有两张图片时这里也要设置图片
-        self.thirdImageView.image = [UIImage imageNamed:self.imageUrls[previousIndex]];
-//        [self.thirdImageView sd_setImageWithURL:[NSURL URLWithString:self.imageUrls[previousIndex]]];
-        
-    }else{
-        
-        [self.recycleImageViews addObject:self.allImageViews[previousIndex]];
-    }
-    
-    [self.recycleImageViews addObject:self.allImageViews[self.currentIndex]];
-    [self.recycleImageViews addObject:self.allImageViews[nextIndex]];
-    
-    if (self.allTitleLabels.count >= self.currentIndex + 1) {
-        
-        // 中间label赋值
-        self.middleLabel = self.allTitleLabels[self.currentIndex];
-    }
-}
-
-#pragma mark - 重载recycleImageViews
-- (void)reloadRecycleImageViews {
-    
-    // 先让scrollView移除所有控件
-    for (UIImageView *imgv in self.recycleImageViews) {
-        
-        [imgv removeFromSuperview];
-    }
-    
-    // 更新要循环的三张图片
-    [self updateRecycleImageViews];
-    
-    // 将这三张图片添加到scrollView
-    for (NSInteger i = 0; i < 3; i++) {
-        
-        UIView *containerView = self.imageContainerViews[i];
-        
-        UIImageView *imageView = self.recycleImageViews[i];
-        imageView.transform = CGAffineTransformIdentity;
-        
-        CGRect rect = imageView.frame;
-        
-        containerView.frame = CGRectMake(_scrollView.bounds.size.width * i, rect.origin.y, rect.size.width, rect.size.height);
-        
-        imageView.frame = containerView.bounds;
-        
-        [containerView addSubview:imageView];
-        
-        if (self.scaleAnimated) {
-            imageView.transform = CGAffineTransformMakeScale(0.8, 0.8);
-            imageView.center = CGPointMake(containerView.frame.size.width * 0.5, containerView.frame.size.height * 0.5);
-        }
-        
-        [_scrollView addSubview:containerView];
-    }
-    
-    // 如果只有一张图片及以下，就没必要滚动了吧
-    _scrollView.scrollEnabled = YES;
-    
-    if (_pagesCount <= 1) {
-        
-        _scrollView.contentOffset = CGPointMake(self.bounds.size.width * 2, 0);
-        _scrollView.scrollEnabled = NO;
-        _pageControl.hidden = YES;
-        
-        return;
-    }
-    
-    // 设置scollView偏移
-    _scrollView.contentOffset = CGPointMake(self.bounds.size.width, 0);
-    
-    // 设置pageControl的当前页
-    _pageControl.currentPage = self.currentIndex;
+    self.contentView.frame = self.bounds;
+    self.collectionView.frame = self.contentView.bounds;
+    self.flowlayout.itemSize = self.bounds.size;
+    _pageControl.frame = CGRectMake(0, self.bounds.size.height - 20, self.bounds.size.width, 20);
 }
 
 #pragma mark - 添加定时器
@@ -342,7 +222,6 @@
     self.timer = [NSTimer scheduledTimerWithTimeInterval:_autoRecycleInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
         
         [weakSelf startAutoRecycle];
-        
     }];
 }
 
@@ -360,56 +239,124 @@
         return;
     }
     
-    CGPoint newOffset = CGPointMake(_scrollView.bounds.size.width * 2, 0);
-    [_scrollView setContentOffset:newOffset animated:YES];
+    CGPoint newOffset = CGPointMake(_collectionView.contentOffset.x + _collectionView.bounds.size.width, 0);
+    [_collectionView setContentOffset:newOffset animated:YES];
+}
+
+#pragma mark - UICollectionViewDataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return self.dataSourceArr.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    JKRecycleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([JKRecycleCell class]) forIndexPath:indexPath];
+    
+    [cell bindDict:self.dataSourceArr[indexPath.item]];
+    
+    return cell;
+}
+
+#pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+    
+    !self.imageClickBlock ? : self.imageClickBlock(self.dataSourceArr[indexPath.item]);
+    
+    if ([self.delegate respondsToSelector:@selector(recycleView:didClickImageWithDict:)]) {
+        
+        [self.delegate recycleView:self didClickImageWithDict:self.dataSourceArr[indexPath.item]];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (_scaleAnimated) {
+        
+        cell.transform = CGAffineTransformMakeScale(0.8, 0.8);
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (!_scaleAnimated) {
+        return;
+    }
+    
+    NSIndexPath *index = [collectionView indexPathsForVisibleItems].lastObject;
+    
+    UICollectionViewCell *cell1 = [collectionView cellForItemAtIndexPath:index];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        
+        cell1.transform = CGAffineTransformIdentity;
+    }];
 }
 
 #pragma mark - ScrollView Delegate
-// 根据滚动的偏移量设置当前的索引，并更新要进行循环的三张图片
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
-    CGFloat offsetX = scrollView.contentOffset.x;
     
-    if (offsetX >= (2 * _scrollView.bounds.size.width)) {
-        
-        self.currentIndex = [self getVaildNextPageIndexWithIndex:self.currentIndex + 1];
-        self.currentImageView = self.allImageViews[self.currentIndex];
-        [self reloadRecycleImageViews];
-    }
-    
-    if (offsetX <= 0) {
-        
-        self.currentIndex = [self getVaildNextPageIndexWithIndex:self.currentIndex - 1];
-        self.currentImageView = self.allImageViews[self.currentIndex];
-        [self reloadRecycleImageViews];
-    }
 }
 
 // 减速完毕 重新设置scrollView的x偏移
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
-    [scrollView setContentOffset:CGPointMake(_scrollView.bounds.size.width, 0) animated:YES];
-    
-    if (!self.scaleAnimated) {
-        return;
-    }
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        
-        self.currentImageView.transform = CGAffineTransformIdentity;
-    }];
+    [self adjustContentOffset:scrollView];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
     
-    if (!self.scaleAnimated) {
-        return;
-    }
+    [self adjustContentOffset:scrollView];
+}
+
+- (void)adjustContentOffset:(UIScrollView *)scrollView{
     
-    [UIView animateWithDuration:0.25 animations:^{
+    NSInteger page = scrollView.contentOffset.x / scrollView.bounds.size.width;
+    
+    if (page == 0) { // 滚动到左边，自动调整到倒数第二
         
-        self.currentImageView.transform = CGAffineTransformIdentity;
-    }];
+        scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width * (_pagesCount), 0);
+        _pageControl.currentPage = _pagesCount;
+        
+        if (_scaleAnimated) {
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_pagesCount inSection:0]];
+                
+                [UIView animateWithDuration:0.25 animations:^{
+                    
+                    cell.transform = CGAffineTransformIdentity;
+                }];
+            });
+        }
+        
+    }else if (page == _pagesCount + 1){ // 滚动到右边，自动调整到第二个
+        
+        scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width, 0);
+        _pageControl.currentPage = 0;
+        
+        if (_scaleAnimated) {
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+                
+                [UIView animateWithDuration:0.25 animations:^{
+                    
+                    cell.transform = CGAffineTransformIdentity;
+                }];
+            });
+        }
+        
+    }else{
+        
+        _pageControl.currentPage = page - 1;
+    }
 }
 
 // 手指拖动 移除定时器
@@ -425,137 +372,6 @@
 }
 
 #pragma mark - setter方法
-/** 设置数据 */
-- (void)setImageUrls:(NSArray *)imageUrls titles:(NSArray *)titles otherDataDicts:(NSArray <NSDictionary *> *)otherDataDicts{
-    
-    if (imageUrls.count <= 0 || imageUrls == nil) {
-        
-        [self removeTimer];
-        
-        _pagesCount = 0;
-        _scrollView.scrollEnabled = NO;
-        _pageControl.hidden = YES;
-        self.tipLabel.hidden = NO;
-        
-        for (UIImageView *imgv in _allImageViews) {
-            [imgv removeFromSuperview];
-        }
-        
-        [_allImageViews removeAllObjects];
-        [_recycleImageViews removeAllObjects];
-        [_allTitleLabels removeAllObjects];
-        [_otherDataDicts removeAllObjects];
-        
-        return;
-    }
-    
-    self.tipLabel.hidden = YES;
-    
-    self.isDataAdded = NO;
-    
-    // 防止重复赋值
-    if (imageUrls.count == self.imageUrls.count) {
-        
-        self.isDataAdded = YES;
-        
-        for (int i = 0; i < imageUrls.count; i++) {
-            
-            NSString *str1 = imageUrls[i];
-            NSString *str2 = self.imageUrls[i];
-            if ([str1 isEqualToString:str2]) continue;
-            self.isDataAdded = NO;
-            
-            break;
-        }
-    }
-    
-    // 如果数据已经添加，直接返回
-    if (self.isDataAdded) {
-        return;
-    }
-    
-    [self removeTimer];
-    _pagesCount = 0;
-    self.currentIndex = 0;
-    _scrollView.scrollEnabled = NO;
-    
-    // 赋值
-    self.imageUrls = nil;
-    self.imageUrls = [imageUrls copy];
-    [self.otherDataDicts removeAllObjects];
-    [self.otherDataDicts addObjectsFromArray:otherDataDicts];;
-    
-    // pageControl的页数就是图片的个数
-    _pagesCount = (int)imageUrls.count;
-    self.pageControl.numberOfPages = _pagesCount;
-    
-    // 先清空数组
-    [self.allImageViews removeAllObjects];
-    [self.allTitleLabels removeAllObjects];
-    
-    // 循环创建imageView等控件，添加到数组中
-    for (int i = 0; i < _pagesCount; i++) {
-        
-        // 创建imageView
-        UIImageView *imageView = [[UIImageView alloc] init];
-        
-// TODO: --- 在这里设置图片
-        imageView.image = [UIImage imageNamed:imageUrls[i]];
-//        [imageView sd_setImageWithURL:[NSURL URLWithString:imageUrls[i]]];
-        
-        imageView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-        // 将控件添加到数组
-        [self.allImageViews addObject:imageView];
-        
-        if (titles == nil || titles.count < imageUrls.count) continue;
-        
-        // 创建titleLabel
-        UILabel *titleLabel = [[UILabel alloc] init];
-        //        [titleLabel sizeToFit];
-        titleLabel.frame = CGRectMake(0, imageView.bounds.size.height-50, imageView.bounds.size.width, 30);
-        titleLabel.textAlignment = NSTextAlignmentLeft;
-        titleLabel.numberOfLines = 0;
-        titleLabel.font = [UIFont boldSystemFontOfSize:20];
-        titleLabel.shadowColor = [UIColor darkGrayColor];
-        titleLabel.shadowOffset = CGSizeMake(1, 0);
-        titleLabel.textColor = [UIColor whiteColor];
-        titleLabel.backgroundColor = [UIColor clearColor];
-        titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
-        
-        titleLabel.text = titles[i];
-        
-        CGSize labelSize = [titleLabel sizeThatFits:CGSizeMake(imageView.bounds.size.width-30, MAXFLOAT)];
-        titleLabel.frame = CGRectMake(15, self.pageControl.frame.origin.y - labelSize.height, imageView.bounds.size.width-30, labelSize.height);
-        
-        [imageView addSubview:titleLabel];
-        
-        [self.allTitleLabels addObject:titleLabel];
-    }
-    
-    _scrollView.scrollEnabled = YES;
-    
-    // 更新要进行循环的三张图片
-    [self reloadRecycleImageViews];
-    
-    // 开始自动循环
-    [self addTimer];
-    
-    if (imageUrls.count <= 1) {
-        
-        _pageControl.hidden = YES;
-    }
-    
-    self.currentImageView = self.allImageViews.firstObject;
-    
-    if (!self.scaleAnimated) {
-        return;
-    }
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        
-        self.currentImageView.transform = CGAffineTransformIdentity;
-    }];
-}
 
 - (void)setAutoRecycle:(BOOL)autoRecycle{
     _autoRecycle = autoRecycle;
@@ -581,17 +397,117 @@
     NSLog(@"%d, %s",__LINE__, __func__);
 }
 
-#pragma mark - 点击了中间的ImageView即当前显示的ImageView
-- (void)clickMiddleImageView {
+@end
+
+#pragma mark - -------------cell-------------
+
+@interface JKRecycleCell ()
+
+/** containerView */
+@property (nonatomic, weak) UIView *containerView;
+
+/** imageView */
+@property (nonatomic, weak) UIImageView *imageView;
+
+/** titleLabel */
+@property (nonatomic, weak) UILabel *titleLabel;
+@end
+
+@implementation JKRecycleCell
+
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]) {
+        [self initialization];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder{
+    if (self = [super initWithCoder:aDecoder]) {
+        [self initialization];
+    }
+    return self;
+}
+
+- (UIView *)containerView{
+    if (!_containerView) {
+        UIView *containerView = [[UIView alloc] init];
+        [self.contentView addSubview:containerView];
+        
+        containerView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSArray *containerViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[containerView]-0-|" options:0 metrics:nil views:@{@"containerView" : containerView}];
+        [self addConstraints:containerViewCons1];
+        
+        NSArray *containerViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[containerView]-0-|" options:0 metrics:nil views:@{@"containerView" : containerView}];
+        [self addConstraints:containerViewCons2];
+        
+        _containerView = containerView;
+    }
+    return _containerView;
+}
+
+- (UIImageView *)imageView{
+    if (!_imageView) {
+        UIImageView *imageView = [[UIImageView alloc] init];
+        [self.containerView addSubview:imageView];
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSArray *imageViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[imageView]-0-|" options:0 metrics:nil views:@{@"imageView" : imageView}];
+        [self addConstraints:imageViewCons1];
+        
+        NSArray *imageViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[imageView]-0-|" options:0 metrics:nil views:@{@"imageView" : imageView}];
+        [self addConstraints:imageViewCons2];
+        _imageView = imageView;
+    }
+    return _imageView;
+}
+
+- (UILabel *)titleLabel{
+    if (!_titleLabel) {
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.frame = CGRectMake(100, 20, 100, 30);
+        titleLabel.textAlignment = NSTextAlignmentLeft;
+        titleLabel.numberOfLines = 0;
+        titleLabel.font = [UIFont boldSystemFontOfSize:20];
+        titleLabel.shadowColor = [UIColor darkGrayColor];
+        titleLabel.shadowOffset = CGSizeMake(1, 0);
+        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.backgroundColor = [UIColor clearColor];
+        titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+        [self.containerView addSubview:titleLabel];
+        
+        _titleLabel = titleLabel;
+    }
+    return _titleLabel;
+}
+
+- (void)initialization{
     
-    if (_pagesCount <= 0) {
+}
+
+- (void)bindDict:(NSDictionary *)dict{
+    _dict = [dict copy];
+    
+    self.imageView.image = [UIImage imageNamed:_dict[JKRecycleImageUrlKey]];
+    
+    if (_dict[JKRecycleTitleKey] == nil) {
+        
+        _titleLabel.hidden = YES;
+        
         return;
     }
     
-    !self.imageClickBlock ? : self.imageClickBlock(self.currentIndex, (self.otherDataDicts.count == self.imageUrls.count) ? [self.otherDataDicts objectAtIndex:self.currentIndex] : @{@"error" : @"图片和其它数据不一致"});
+    self.titleLabel.text = [NSString stringWithFormat:@"%@", _dict[JKRecycleTitleKey]];
     
-    if ([self.delegate respondsToSelector:@selector(recycleView:didClickImageWithIndex:otherDataDict:)]) {
-        [self.delegate recycleView:self didClickImageWithIndex:self.currentIndex otherDataDict:(self.otherDataDicts.count == self.imageUrls.count) ? [self.otherDataDicts objectAtIndex:self.currentIndex] : @{@"error" : @"图片和其它数据不一致"}];
-    }
+    self.titleLabel.hidden = NO;
+}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    
+    if (!_titleLabel) { return; }
+    
+    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.contentView.bounds.size.width - 30, INFINITY)];
+    _titleLabel.frame = CGRectMake(15, self.contentView.bounds.size.height - 20 - labelSize.height, self.contentView.bounds.size.width - 30, labelSize.height);
 }
 @end
