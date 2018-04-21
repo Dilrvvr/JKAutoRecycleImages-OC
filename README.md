@@ -4,9 +4,6 @@
 ***
 ![image](https://github.com/Jacky-An/JKAutoRecycleImages-OC/raw/master/introductionimages/introduction.gif)
 ***
-* 之前的实现思路都是在别人的博客中看到的，也下载了demo。无一例外都是先创建好左中右三个imageView，然后切换图片。
-
-* 实际体验中发现该方案存在一个问题：<font color=#DC143C size=3 face="黑体">随意方向拖动一点即切换下一张</font>。在下载的demo中都有这样的问题。
 
 * 之前的实现思路是使用UIScrollView。
 	* 1、根据外界传入的数据先创建好所有的imageView，保存到数组中。
