@@ -1,6 +1,6 @@
 # JKAutoRecycleImages-OC
-###无限轮播图-OC
-###点击查看[Swift版-UIScrollView-待更新](https://github.com/Jacky-An/JKAutoRecycleImages-Swift/ "Title") 
+### 无限轮播图-OC
+### 点击查看[Swift版](https://github.com/Jacky-An/JKAutoRecycleImages-Swift/ "Title") 
 ***
 ![image](https://github.com/Jacky-An/JKAutoRecycleImages-OC/raw/master/introductionimages/introduction.gif)
 ***

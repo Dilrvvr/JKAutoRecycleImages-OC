@@ -76,11 +76,5 @@ static NSString * const JKRecycleOtherDictKey = @"JKRecycleOtherDictKey";
 
 @interface JKRecycleCell : UICollectionViewCell
 
-/** dict */
-@property (nonatomic, copy, readonly) NSDictionary *dict;
-
-/** selectImageBlock */
-@property (nonatomic, copy) void (^selectImageBlock)(NSDictionary *dict);
-
 - (void)bindDict:(NSDictionary *)dict;
 @end

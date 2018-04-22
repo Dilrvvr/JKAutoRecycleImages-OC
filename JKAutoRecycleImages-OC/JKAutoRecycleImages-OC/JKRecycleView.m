@@ -212,7 +212,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     if (!_autoRecycle ||
         _pagesCount <= 1 ||
         self.timer != nil ||
-        _autoRecycleInterval <= 1) return;
+        _autoRecycleInterval < 1) return;
     
     __weak typeof(self) weakSelf = self;
     
@@ -400,6 +400,9 @@ static NSString * const JKIndexKey = @"JKIndexKey";
 
 @interface JKRecycleCell ()
 
+/** dict */
+@property (nonatomic, copy, readonly) NSDictionary *dict;
+
 /** containerView */
 @property (nonatomic, weak) UIView *containerView;
 
@@ -429,14 +432,14 @@ static NSString * const JKIndexKey = @"JKIndexKey";
 - (UIView *)containerView{
     if (!_containerView) {
         UIView *containerView = [[UIView alloc] init];
-        [self.contentView addSubview:containerView];
+        [self.contentView insertSubview:containerView atIndex:0];
         
         containerView.translatesAutoresizingMaskIntoConstraints = NO;
         NSArray *containerViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[containerView]-0-|" options:0 metrics:nil views:@{@"containerView" : containerView}];
-        [self addConstraints:containerViewCons1];
+        [self.contentView addConstraints:containerViewCons1];
         
         NSArray *containerViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[containerView]-0-|" options:0 metrics:nil views:@{@"containerView" : containerView}];
-        [self addConstraints:containerViewCons2];
+        [self.contentView addConstraints:containerViewCons2];
         
         _containerView = containerView;
     }
@@ -450,10 +453,10 @@ static NSString * const JKIndexKey = @"JKIndexKey";
         
         imageView.translatesAutoresizingMaskIntoConstraints = NO;
         NSArray *imageViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[imageView]-0-|" options:0 metrics:nil views:@{@"imageView" : imageView}];
-        [self addConstraints:imageViewCons1];
+        [self.containerView addConstraints:imageViewCons1];
         
         NSArray *imageViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[imageView]-0-|" options:0 metrics:nil views:@{@"imageView" : imageView}];
-        [self addConstraints:imageViewCons2];
+        [self.containerView addConstraints:imageViewCons2];
         _imageView = imageView;
     }
     return _imageView;
@@ -463,7 +466,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     if (!_titleLabel) {
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.frame = CGRectMake(100, 20, 100, 30);
-        titleLabel.textAlignment = NSTextAlignmentLeft;
+        titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.numberOfLines = 0;
         titleLabel.font = [UIFont boldSystemFontOfSize:20];
         titleLabel.shadowColor = [UIColor darkGrayColor];
