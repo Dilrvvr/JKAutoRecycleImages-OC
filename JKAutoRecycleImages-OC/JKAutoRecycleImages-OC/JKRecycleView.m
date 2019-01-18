@@ -8,7 +8,16 @@
 
 #import "JKRecycleView.h"
 
-static NSString * const JKIndexKey = @"JKIndexKey";
+#pragma mark - -------------cell-------------
+
+@interface JKRecycleCell : UICollectionViewCell
+
+- (void)bindDict:(NSDictionary *)dict
+    contentInset:(UIEdgeInsets)contentInset
+    cornerRadius:(CGFloat)cornerRadius;
+@end
+
+#pragma mark - -------------JKRecycleView-------------
 
 @interface JKRecycleView () <UICollectionViewDataSource, UICollectionViewDelegate>
 {
@@ -36,6 +45,22 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     recycleView.flowlayout.itemSize = frame.size;
     
     return recycleView;
+}
+
+- (void)dealloc{
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self removeTimer];
+    NSLog(@"%d, %s",__LINE__, __func__);
+}
+
+- (void)didMoveToSuperview{
+    [super didMoveToSuperview];
+    
+    if (!self.superview) {
+        
+        [self removeTimer];
+    }
 }
 
 /**
@@ -75,78 +100,8 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     }];
 }
 
-#pragma mark - 懒加载
-
-- (UIView *)contentView{
-    if (!_contentView) {
-        UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
-        [self insertSubview:contentView atIndex:0];
-        
-        //        contentView.translatesAutoresizingMaskIntoConstraints = NO;
-        //        NSArray *contentViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[contentView]-0-|" options:0 metrics:nil views:@{@"contentView" : contentView}];
-        //        [self addConstraints:contentViewCons1];
-        //
-        //        NSArray *contentViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[contentView]-0-|" options:0 metrics:nil views:@{@"contentView" : contentView}];
-        //        [self addConstraints:contentViewCons2];
-        
-        _contentView = contentView;
-    }
-    return _contentView;
-}
-
-- (UICollectionView *)collectionView{
-    if (!_collectionView) {
-        
-        _flowlayout = [[UICollectionViewFlowLayout alloc] init];
-        _flowlayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        _flowlayout.minimumLineSpacing = 0;
-        _flowlayout.minimumInteritemSpacing = 0;
-        
-        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_flowlayout];
-        collectionView.backgroundColor = nil;
-        collectionView.scrollsToTop = NO;
-        collectionView.dataSource = self;
-        collectionView.delegate = self;
-        collectionView.pagingEnabled = YES;
-        collectionView.showsHorizontalScrollIndicator = NO;
-        collectionView.showsVerticalScrollIndicator = NO;
-        collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
-        [self.contentView insertSubview:collectionView atIndex:0];
-        
-        [collectionView registerClass:[JKRecycleCell class] forCellWithReuseIdentifier:NSStringFromClass([JKRecycleCell class])];
-        
-        //        collectionView.translatesAutoresizingMaskIntoConstraints = NO;
-        //        NSArray *collectionViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
-        //        [self addConstraints:collectionViewCons1];
-        //
-        //        NSArray *collectionViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
-        //        [self addConstraints:collectionViewCons2];
-        
-        _collectionView = collectionView;
-    }
-    return _collectionView;
-}
-
-- (UIPageControl *)pageControl {
-    if (!_pageControl) {
-        UIPageControl *pageControl = [[UIPageControl alloc] init];
-        pageControl.userInteractionEnabled = NO;
-        //        pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-        //        pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
-        [self.contentView addSubview:pageControl];
-        _pageControl = pageControl;
-    }
-    return _pageControl;
-}
-
-- (NSMutableArray *)dataSourceArr{
-    if (!_dataSourceArr) {
-        _dataSourceArr = [NSMutableArray array];
-    }
-    return _dataSourceArr;
-}
-
 #pragma mark - 初始化
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         
@@ -165,8 +120,6 @@ static NSString * const JKIndexKey = @"JKIndexKey";
 
 - (void)initialization {
     
-    self.backgroundColor = [UIColor lightGrayColor];
-    
     // 初始化数据
     _autoRecycleInterval = 3;
     _autoRecycle = YES;
@@ -175,7 +128,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     [self collectionView];
     
     // 初始化pageControl
-    [self pageControl];
+    //[self pageControl];
     
     //    UILabel *tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
     //    tipLabel.text = @"此处应有图片";
@@ -202,8 +155,20 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     
     self.contentView.frame = self.bounds;
     self.collectionView.frame = self.contentView.bounds;
-    self.flowlayout.itemSize = self.bounds.size;
-    _pageControl.frame = CGRectMake(0, self.bounds.size.height - 20, self.bounds.size.width, 20);
+    
+    self.flowlayout.itemSize = self.contentView.bounds.size;
+    
+    if (!_manualPageControlFrame) {
+        
+        if (self.pageControlInBottomInset) {
+            
+            self.pageControl.frame = CGRectMake(0, self.bounds.size.height - self.contentInset.bottom + (self.contentInset.bottom - 20) * 0.5, self.bounds.size.width, 20);
+            
+        } else {
+            
+            self.pageControl.frame = CGRectMake(0, self.bounds.size.height - 20 - self.contentInset.bottom, self.bounds.size.width, 20);
+        }
+    }
 }
 
 #pragma mark - 添加定时器
@@ -216,10 +181,17 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     
     __weak typeof(self) weakSelf = self;
     
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:_autoRecycleInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+    if (@available(iOS 10.0, *)) {
         
-        [weakSelf startAutoRecycle];
-    }];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:_autoRecycleInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+            
+            [weakSelf startAutoRecycle];
+        }];
+        
+    } else {
+        
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:_autoRecycleInterval target:self selector:@selector(startAutoRecycle) userInfo:nil repeats:YES];
+    }
 }
 
 #pragma mark - 移除定时器
@@ -232,9 +204,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
 #pragma mark - 循环滚动的方法
 - (void)startAutoRecycle {
     
-    if (!self.timer) {
-        return;
-    }
+    if (!self.timer) { return; }
     
     CGPoint newOffset = CGPointMake(_collectionView.contentOffset.x + _collectionView.bounds.size.width, 0);
     [_collectionView setContentOffset:newOffset animated:YES];
@@ -250,7 +220,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     
     JKRecycleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([JKRecycleCell class]) forIndexPath:indexPath];
     
-    [cell bindDict:self.dataSourceArr[indexPath.item]];
+    [cell bindDict:self.dataSourceArr[indexPath.item] contentInset:self.contentInset cornerRadius:self.cornerRadius];
     
     return cell;
 }
@@ -317,7 +287,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     if (page == 0) { // 滚动到左边，自动调整到倒数第二
         
         scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width * (_pagesCount), 0);
-        _pageControl.currentPage = _pagesCount;
+        self.pageControl.currentPage = _pagesCount;
         
         if (_scaleAnimated) {
             
@@ -335,7 +305,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     }else if (page == _pagesCount + 1){ // 滚动到右边，自动调整到第二个
         
         scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width, 0);
-        _pageControl.currentPage = 0;
+        self.pageControl.currentPage = 0;
         
         if (_scaleAnimated) {
             
@@ -352,7 +322,7 @@ static NSString * const JKIndexKey = @"JKIndexKey";
         
     }else{
         
-        _pageControl.currentPage = page - 1;
+        self.pageControl.currentPage = page - 1;
     }
 }
 
@@ -387,11 +357,75 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     [self addTimer];
 }
 
-- (void)dealloc{
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self removeTimer];
-    NSLog(@"%d, %s",__LINE__, __func__);
+#pragma mark - Property
+
+- (UIView *)contentView{
+    if (!_contentView) {
+        UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
+        [self insertSubview:contentView atIndex:0];
+        
+        //        contentView.translatesAutoresizingMaskIntoConstraints = NO;
+        //        NSArray *contentViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[contentView]-0-|" options:0 metrics:nil views:@{@"contentView" : contentView}];
+        //        [self addConstraints:contentViewCons1];
+        //
+        //        NSArray *contentViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[contentView]-0-|" options:0 metrics:nil views:@{@"contentView" : contentView}];
+        //        [self addConstraints:contentViewCons2];
+        
+        _contentView = contentView;
+    }
+    return _contentView;
+}
+
+- (UICollectionView *)collectionView{
+    if (!_collectionView) {
+        
+        _flowlayout = [[UICollectionViewFlowLayout alloc] init];
+        _flowlayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        _flowlayout.minimumLineSpacing = 0;
+        _flowlayout.minimumInteritemSpacing = 0;
+        
+        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_flowlayout];
+        collectionView.backgroundColor = nil;
+        collectionView.scrollsToTop = NO;
+        collectionView.dataSource = self;
+        collectionView.delegate = self;
+        collectionView.pagingEnabled = YES;
+        collectionView.showsHorizontalScrollIndicator = NO;
+        collectionView.showsVerticalScrollIndicator = NO;
+        collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
+        [self.contentView insertSubview:collectionView atIndex:0];
+        
+        [collectionView registerClass:[JKRecycleCell class] forCellWithReuseIdentifier:NSStringFromClass([JKRecycleCell class])];
+        
+        //        collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+        //        NSArray *collectionViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
+        //        [self addConstraints:collectionViewCons1];
+        //
+        //        NSArray *collectionViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
+        //        [self addConstraints:collectionViewCons2];
+        
+        _collectionView = collectionView;
+    }
+    return _collectionView;
+}
+
+- (UIPageControl *)pageControl {
+    if (!_pageControl) {
+        UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.bounds.size.height - 20 - self.contentInset.bottom, self.bounds.size.width, 20)];
+        pageControl.userInteractionEnabled = NO;
+        //        pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+        //        pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+        [self.contentView addSubview:pageControl];
+        _pageControl = pageControl;
+    }
+    return _pageControl;
+}
+
+- (NSMutableArray *)dataSourceArr{
+    if (!_dataSourceArr) {
+        _dataSourceArr = [NSMutableArray array];
+    }
+    return _dataSourceArr;
 }
 
 @end
@@ -409,11 +443,23 @@ static NSString * const JKIndexKey = @"JKIndexKey";
 /** imageView */
 @property (nonatomic, weak) UIImageView *imageView;
 
+/** imageViewHorizontalConstraints */
+@property (nonatomic, strong) NSArray *imageViewHorizontalConstraints;
+
+/** imageViewVerticalConstraints */
+@property (nonatomic, strong) NSArray *imageViewVerticalConstraints;
+
+/** 图片内缩的大小 */
+@property (nonatomic, assign) UIEdgeInsets contentInset;
+
 /** titleLabel */
 @property (nonatomic, weak) UILabel *titleLabel;
 @end
 
 @implementation JKRecycleCell
+
+#pragma mark
+#pragma mark - 初始化
 
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
@@ -429,38 +475,108 @@ static NSString * const JKIndexKey = @"JKIndexKey";
     return self;
 }
 
-- (UIView *)containerView{
-    if (!_containerView) {
-        UIView *containerView = [[UIView alloc] init];
-        [self.contentView insertSubview:containerView atIndex:0];
-        
-        containerView.translatesAutoresizingMaskIntoConstraints = NO;
-        NSArray *containerViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[containerView]-0-|" options:0 metrics:nil views:@{@"containerView" : containerView}];
-        [self.contentView addConstraints:containerViewCons1];
-        
-        NSArray *containerViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[containerView]-0-|" options:0 metrics:nil views:@{@"containerView" : containerView}];
-        [self.contentView addConstraints:containerViewCons2];
-        
-        _containerView = containerView;
-    }
-    return _containerView;
+/** 初始化自身属性 交给子类重写 super自动调用该方法 */
+- (void)initializeProperty{
+    
+    self.contentInset = UIEdgeInsetsZero;
 }
 
-- (UIImageView *)imageView{
-    if (!_imageView) {
-        UIImageView *imageView = [[UIImageView alloc] init];
-        [self.containerView addSubview:imageView];
-        
-        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        NSArray *imageViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[imageView]-0-|" options:0 metrics:nil views:@{@"imageView" : imageView}];
-        [self.containerView addConstraints:imageViewCons1];
-        
-        NSArray *imageViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[imageView]-0-|" options:0 metrics:nil views:@{@"imageView" : imageView}];
-        [self.containerView addConstraints:imageViewCons2];
-        _imageView = imageView;
-    }
-    return _imageView;
+/** 构造函数初始化时调用 注意调用super */
+- (void)initialization{
+    
+    [self initializeProperty];
+    [self createUI];
+    [self layoutUI];
+    [self initializeUIData];
 }
+
+/** 创建UI 交给子类重写 super自动调用该方法 */
+- (void)createUI{
+    
+    UIView *containerView = [[UIView alloc] init];
+    [self.contentView insertSubview:containerView atIndex:0];
+    _containerView = containerView;
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.containerView addSubview:imageView];
+    _imageView = imageView;
+}
+
+/** 布局UI 交给子类重写 super自动调用该方法 */
+- (void)layoutUI{
+    
+    self.containerView.frame = self.contentView.bounds;
+    
+    self.imageView.frame = CGRectMake(self.contentInset.left, self.contentInset.top, CGRectGetWidth(self.containerView.frame) - self.contentInset.left - self.contentInset.right, CGRectGetHeight(self.containerView.frame) - self.contentInset.top - self.contentInset.bottom);
+    
+    if (!_titleLabel) { return; }
+    
+    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.contentView.bounds.size.width - 30 - self.contentInset.left - self.contentInset.right, INFINITY)];
+    
+    _titleLabel.frame = CGRectMake((CGRectGetWidth(self.containerView.frame) - labelSize.width) * 0.5, self.contentView.bounds.size.height - 20 - labelSize.height - self.contentInset.bottom, labelSize.width, labelSize.height);
+}
+
+/** 初始化UI数据 交给子类重写 super自动调用该方法 */
+- (void)initializeUIData{
+    
+}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    
+    [self layoutUI];
+}
+
+#pragma mark
+#pragma mark - 赋值
+
+- (void)bindDict:(NSDictionary *)dict
+    contentInset:(UIEdgeInsets)contentInset
+    cornerRadius:(CGFloat)cornerRadius{
+    
+    _dict = [dict copy];
+    
+    [self updateUIWithContentInset:contentInset cornerRadius:cornerRadius];
+    
+    self.imageView.image = [UIImage imageNamed:_dict[JKRecycleImageUrlKey]];
+    
+    /*
+    NSString *imageUrl = _dict[JKRecycleImageUrlKey];
+     
+    [self.imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl ? imageUrl : @""] placeholderImage:dict[JKRecyclePlaceholderImageKey]]; //*/
+    
+    if (_dict[JKRecycleTitleKey] == nil) {
+        
+        _titleLabel.hidden = YES;
+        
+        return;
+    }
+    
+    self.titleLabel.text = [NSString stringWithFormat:@"%@", _dict[JKRecycleTitleKey]];
+    
+    self.titleLabel.hidden = NO;
+}
+
+- (void)updateUIWithContentInset:(UIEdgeInsets)contentInset
+                    cornerRadius:(CGFloat)cornerRadius{
+    
+    if (self.imageView.layer.cornerRadius != cornerRadius) {
+        
+        self.imageView.layer.cornerRadius = cornerRadius;
+        self.imageView.layer.masksToBounds = YES;
+    }
+    
+    if (!UIEdgeInsetsEqualToEdgeInsets(contentInset, self.contentInset)) {
+        
+        self.contentInset = contentInset;
+        
+        [self setNeedsLayout];
+    }
+}
+
+#pragma mark
+#pragma mark - Property
 
 - (UILabel *)titleLabel{
     if (!_titleLabel) {
@@ -479,35 +595,5 @@ static NSString * const JKIndexKey = @"JKIndexKey";
         _titleLabel = titleLabel;
     }
     return _titleLabel;
-}
-
-- (void)initialization{
-    
-}
-
-- (void)bindDict:(NSDictionary *)dict{
-    _dict = [dict copy];
-    
-    self.imageView.image = [UIImage imageNamed:_dict[JKRecycleImageUrlKey]];
-    
-    if (_dict[JKRecycleTitleKey] == nil) {
-        
-        _titleLabel.hidden = YES;
-        
-        return;
-    }
-    
-    self.titleLabel.text = [NSString stringWithFormat:@"%@", _dict[JKRecycleTitleKey]];
-    
-    self.titleLabel.hidden = NO;
-}
-
-- (void)layoutSubviews{
-    [super layoutSubviews];
-    
-    if (!_titleLabel) { return; }
-    
-    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.contentView.bounds.size.width - 30, INFINITY)];
-    _titleLabel.frame = CGRectMake(15, self.contentView.bounds.size.height - 20 - labelSize.height, self.contentView.bounds.size.width - 30, labelSize.height);
 }
 @end

@@ -11,6 +11,9 @@
 /** 图片 */
 static NSString * const JKRecycleImageUrlKey = @"JKRecycleImageUrlKey";
 
+/** 占位图片 */
+static NSString * const JKRecyclePlaceholderImageKey = @"JKRecycleImageUrlKey";
+
 /** 标题 */
 static NSString * const JKRecycleTitleKey = @"JKRecycleTitleKey";
 
@@ -42,13 +45,25 @@ static NSString * const JKRecycleOtherDictKey = @"JKRecycleOtherDictKey";
 @property (nonatomic, strong, readonly) UICollectionViewFlowLayout *flowlayout;
 
 /** pageControl */
-@property (nonatomic, strong) UIPageControl *pageControl;
+@property (nonatomic, strong, readonly) UIPageControl *pageControl;
+
+/** 是否让pageControl位于contentInset.bottom高度的中间 */
+@property (nonatomic, assign) BOOL pageControlInBottomInset;
+
+/** 是否手动设置pageControl的frame */
+@property (nonatomic, assign) BOOL manualPageControlFrame;
 
 /** 是否有缩放动画 默认没有 */
 @property (nonatomic, assign) BOOL scaleAnimated;
 
 /** 代理 */
 @property (nonatomic, weak) id<JKRecycleViewDelegate> delegate;
+
+/** 图片内缩的大小 */
+@property (nonatomic, assign) UIEdgeInsets contentInset;
+
+/** 图片的圆角大小 */
+@property (nonatomic, assign) CGFloat cornerRadius;
 
 /** 监听图片点击的block */
 @property (nonatomic, copy) void (^imageClickBlock)(NSDictionary *dict);
@@ -68,13 +83,4 @@ static NSString * const JKRecycleOtherDictKey = @"JKRecycleOtherDictKey";
 
 /** 移除定时器 */
 - (void)removeTimer;
-@end
-
-
-
-#pragma mark - -------------cell-------------
-
-@interface JKRecycleCell : UICollectionViewCell
-
-- (void)bindDict:(NSDictionary *)dict;
 @end

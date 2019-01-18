@@ -10,6 +10,7 @@
 #import "JKRecycleView.h"
 
 @interface ViewController () <JKRecycleViewDelegate>
+
 @property (weak, nonatomic) IBOutlet JKRecycleView *recycleView;
 @end
 
@@ -19,6 +20,11 @@
     [super viewDidLoad];
     
     self.recycleView.delegate = self;
+    
+    self.recycleView.backgroundColor = [UIColor lightGrayColor];
+    
+    self.recycleView.cornerRadius = 8;
+    self.recycleView.contentInset = UIEdgeInsetsMake(10, 10, 10, 10);
     
     [self.recycleView setDataSource:@[
                                       @{JKRecycleImageUrlKey : @"kenan01.jpg", JKRecycleTitleKey : @"kenan01-柯兰"},
