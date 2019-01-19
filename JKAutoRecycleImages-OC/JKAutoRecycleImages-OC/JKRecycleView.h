@@ -12,7 +12,7 @@
 static NSString * const JKRecycleImageUrlKey = @"JKRecycleImageUrlKey";
 
 /** 占位图片 */
-static NSString * const JKRecyclePlaceholderImageKey = @"JKRecycleImageUrlKey";
+static NSString * const JKRecyclePlaceholderImageKey = @"JKRecyclePlaceholderImageKey";
 
 /** 标题 */
 static NSString * const JKRecycleTitleKey = @"JKRecycleTitleKey";
