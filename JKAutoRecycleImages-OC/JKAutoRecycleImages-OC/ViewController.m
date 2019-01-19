@@ -26,12 +26,14 @@
     self.recycleView.cornerRadius = 8;
     self.recycleView.contentInset = UIEdgeInsetsMake(10, 10, 10, 10);
     
+    //self.recycleView.scaleAnimated = YES;
+    
     [self.recycleView setDataSource:@[
                                       @{JKRecycleImageUrlKey : @"kenan01.jpg", JKRecycleTitleKey : @"kenan01-柯兰"},
-                                      @{JKRecycleImageUrlKey : @"kenan02.jpg", JKRecycleTitleKey : @"kenan02-柯哀"},
+                                      @{JKRecycleImageUrlKey : @"kenan02.jpg", JKRecycleTitleKey : @"kenan02-柯哀"}]];/*,
                                       @{JKRecycleImageUrlKey : @"kenan03.jpg", JKRecycleTitleKey : @"kenan03-柯兰"},
                                       @{JKRecycleImageUrlKey : @"kenan04.jpg", JKRecycleTitleKey : @"kenan04-新兰"},
-                                      @{JKRecycleImageUrlKey : @"kenan05.jpg", JKRecycleTitleKey : @"kenan05-全家福"}]];
+                                      @{JKRecycleImageUrlKey : @"kenan05.jpg", JKRecycleTitleKey : @"kenan05-全家福"}]]; //*/
 }
 
 #pragma mark - 按钮点击

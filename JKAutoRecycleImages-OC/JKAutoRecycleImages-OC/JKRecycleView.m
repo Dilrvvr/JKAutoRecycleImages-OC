@@ -42,7 +42,7 @@
     
     JKRecycleView *recycleView = [[JKRecycleView alloc] initWithFrame:frame];
     
-    recycleView.flowlayout.itemSize = frame.size;
+    recycleView.flowlayout.itemSize = CGSizeMake(frame.size.width + 2, frame.size.height);
     
     return recycleView;
 }
@@ -74,7 +74,23 @@
     _pagesCount = dataSource.count;
     self.pageControl.numberOfPages = _pagesCount;
     
-    [self.dataSourceArr addObjectsFromArray:dataSource];
+    [self.dataSourceArr removeAllObjects];
+    
+    for (NSDictionary *dict in dataSource) {
+        
+        if ([dict isKindOfClass:[NSDictionary class]]) {
+            
+            [self.dataSourceArr addObject:dict];
+            
+        } else {
+            
+            NSAssert(NO, @"dataSource中对象必须是NSDictionary类型!");
+            
+            [self.dataSourceArr removeAllObjects];
+            
+            return;
+        }
+    }
     
     if (_pagesCount <= 1) {
         
@@ -86,18 +102,30 @@
     }
     
     [self.dataSourceArr addObject:[dataSource.firstObject copy]];
-    
     [self.dataSourceArr insertObject:[dataSource.lastObject copy] atIndex:0];
     
-    [self.collectionView performBatchUpdates:^{
+    [self.collectionView reloadData];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-        
-    } completion:^(BOOL finished) {
-        
-        [self.collectionView setContentOffset:CGPointMake(self.collectionView.bounds.size.width, 0)];
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0] atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:NO];
+    
         [self addTimer];
-    }];
+    });
+    
+    /*
+     [self.collectionView performBatchUpdates:^{
+     
+     [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+     
+     } completion:^(BOOL finished) {
+     
+     //[self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
+     
+     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0] atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:NO];
+     
+     [self addTimer];
+     }]; //*/
 }
 
 #pragma mark - 初始化
@@ -154,9 +182,9 @@
     [super layoutSubviews];
     
     self.contentView.frame = self.bounds;
-    self.collectionView.frame = self.contentView.bounds;
+    self.collectionView.frame = CGRectMake(-1, 0, self.contentView.bounds.size.width + 2, self.contentView.bounds.size.height);
     
-    self.flowlayout.itemSize = self.contentView.bounds.size;
+    self.flowlayout.itemSize = self.collectionView.bounds.size;
     
     if (!_manualPageControlFrame) {
         
@@ -282,11 +310,14 @@
 
 - (void)adjustContentOffset:(UIScrollView *)scrollView{
     
-    NSInteger page = scrollView.contentOffset.x / scrollView.bounds.size.width;
+    NSInteger page = (NSInteger)((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.24) / scrollView.bounds.size.width);
     
     if (page == 0) { // 滚动到左边，自动调整到倒数第二
         
-        scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width * (_pagesCount), 0);
+        //scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width * (_pagesCount), 0);
+        
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.dataSourceArr.count - 2 inSection:0] atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:NO];
+        
         self.pageControl.currentPage = _pagesCount;
         
         if (_scaleAnimated) {
@@ -304,7 +335,10 @@
         
     }else if (page == _pagesCount + 1){ // 滚动到右边，自动调整到第二个
         
-        scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width, 0);
+        //scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width, 0);
+        
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0] atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:NO];
+        
         self.pageControl.currentPage = 0;
         
         if (_scaleAnimated) {
@@ -362,6 +396,7 @@
 - (UIView *)contentView{
     if (!_contentView) {
         UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
+        contentView.clipsToBounds = YES;
         [self insertSubview:contentView atIndex:0];
         
         //        contentView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -412,6 +447,7 @@
 - (UIPageControl *)pageControl {
     if (!_pageControl) {
         UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.bounds.size.height - 20 - self.contentInset.bottom, self.bounds.size.width, 20)];
+        pageControl.hidesForSinglePage = YES;
         pageControl.userInteractionEnabled = NO;
         //        pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
         //        pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
@@ -506,7 +542,7 @@
 /** 布局UI 交给子类重写 super自动调用该方法 */
 - (void)layoutUI{
     
-    self.containerView.frame = self.contentView.bounds;
+    self.containerView.frame = CGRectMake(1, 0, CGRectGetWidth(self.contentView.frame) - 2, CGRectGetHeight(self.contentView.frame));
     
     self.imageView.frame = CGRectMake(self.contentInset.left, self.contentInset.top, CGRectGetWidth(self.containerView.frame) - self.contentInset.left - self.contentInset.right, CGRectGetHeight(self.containerView.frame) - self.contentInset.top - self.contentInset.bottom);
     
@@ -542,9 +578,11 @@
     self.imageView.image = [UIImage imageNamed:_dict[JKRecycleImageUrlKey]];
     
     /*
-    NSString *imageUrl = _dict[JKRecycleImageUrlKey];
-     
-    [self.imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl ? imageUrl : @""] placeholderImage:dict[JKRecyclePlaceholderImageKey]]; //*/
+    id imageUrl = _dict[JKRecycleImageUrlKey];
+    
+    UIImage *placeholderImage = dict[JKRecyclePlaceholderImageKey];
+    
+    [self.imageView sd_setImageWithURL:[imageUrl isKindOfClass:[NSString class]] ? [NSURL URLWithString:imageUrl] : imageUrl placeholderImage:[placeholderImage isKindOfClass:[UIImage class]] ? placeholderImage : nil]; //*/
     
     if (_dict[JKRecycleTitleKey] == nil) {
         
