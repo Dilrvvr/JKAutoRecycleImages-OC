@@ -232,7 +232,7 @@
 #pragma mark - 循环滚动的方法
 - (void)startAutoRecycle {
     
-    if (!self.timer) { return; }
+    if (!self.timer || self.collectionView.isDragging) { return; }
     
     CGPoint newOffset = CGPointMake(_collectionView.contentOffset.x + _collectionView.bounds.size.width, 0);
     [_collectionView setContentOffset:newOffset animated:YES];
@@ -310,7 +310,7 @@
 
 - (void)adjustContentOffset:(UIScrollView *)scrollView{
     
-    NSInteger page = (NSInteger)((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.24) / scrollView.bounds.size.width);
+    NSInteger page = (NSInteger)((scrollView.contentOffset.x + 5) / scrollView.bounds.size.width);
     
     if (page == 0) { // 滚动到左边，自动调整到倒数第二
         
