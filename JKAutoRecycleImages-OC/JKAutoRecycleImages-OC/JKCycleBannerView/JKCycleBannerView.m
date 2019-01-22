@@ -52,7 +52,9 @@
 - (void)dealloc{
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [self removeTimer];
+    
     NSLog(@"%d, %s",__LINE__, __func__);
 }
 
@@ -102,6 +104,8 @@
         
         return;
     }
+    
+    self.collectionView.scrollEnabled = YES;
     
     [self.dataSourceArr addObject:[dataSource.firstObject copy]];
     [self.dataSourceArr insertObject:[dataSource.lastObject copy] atIndex:0];
@@ -335,7 +339,7 @@
             });
         }
         
-    }else if (page == _pagesCount + 1){ // 滚动到右边，自动调整到第二个
+    } else if (page == _pagesCount + 1){ // 滚动到右边，自动调整到第二个
         
         //scrollView.contentOffset = CGPointMake(scrollView.bounds.size.width, 0);
         
@@ -356,7 +360,7 @@
             });
         }
         
-    }else{
+    } else {
         
         self.pageControl.currentPage = page - 1;
     }
@@ -451,9 +455,11 @@
         UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.bounds.size.height - 20 - self.contentInset.bottom, self.bounds.size.width, 20)];
         pageControl.hidesForSinglePage = YES;
         pageControl.userInteractionEnabled = NO;
-        //        pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-        //        pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+        pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+        pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+        
         [self.contentView addSubview:pageControl];
+        
         _pageControl = pageControl;
     }
     return _pageControl;
@@ -480,12 +486,6 @@
 
 /** imageView */
 @property (nonatomic, weak) UIImageView *imageView;
-
-/** imageViewHorizontalConstraints */
-@property (nonatomic, strong) NSArray *imageViewHorizontalConstraints;
-
-/** imageViewVerticalConstraints */
-@property (nonatomic, strong) NSArray *imageViewVerticalConstraints;
 
 /** 图片内缩的大小 */
 @property (nonatomic, assign) UIEdgeInsets contentInset;
@@ -550,9 +550,9 @@
     
     if (!_titleLabel) { return; }
     
-    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.contentView.bounds.size.width - 30 - self.contentInset.left - self.contentInset.right, INFINITY)];
+    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.containerView.bounds.size.width - 30 - self.contentInset.left - self.contentInset.right, INFINITY)];
     
-    _titleLabel.frame = CGRectMake((CGRectGetWidth(self.containerView.frame) - labelSize.width) * 0.5, self.contentView.bounds.size.height - 20 - labelSize.height - self.contentInset.bottom, labelSize.width, labelSize.height);
+    _titleLabel.frame = CGRectMake((CGRectGetWidth(self.containerView.frame) - labelSize.width) * 0.5, self.containerView.bounds.size.height - 20 - labelSize.height - self.contentInset.bottom, labelSize.width, labelSize.height);
 }
 
 /** 初始化UI数据 交给子类重写 super自动调用该方法 */

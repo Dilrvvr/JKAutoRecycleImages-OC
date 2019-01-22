@@ -32,11 +32,26 @@ static NSString * const JKCycleBannerDataKey = @"JKCycleBannerDataKey";
 
 @interface JKCycleBannerView : UIView
 
+/** 是否自动循环 default is YES */
+@property (nonatomic, assign, getter=isAutoRecycle) BOOL autoRecycle;
+
 /** 自动滚动的时间间隔（单位为s）默认3s 不可小于1s */
 @property (nonatomic, assign) NSTimeInterval autoRecycleInterval;
 
-/** 是否自动循环 */
-@property (nonatomic, assign, getter=isAutoRecycle) BOOL autoRecycle;
+/** 是否有缩放动画 默认没有 */
+@property (nonatomic, assign) BOOL scaleAnimated;
+
+/** 图片内缩的大小 */
+@property (nonatomic, assign) UIEdgeInsets contentInset;
+
+/** 图片的圆角大小 */
+@property (nonatomic, assign) CGFloat cornerRadius;
+
+/** 代理 */
+@property (nonatomic, weak) id<JKCycleBannerViewDelegate> delegate;
+
+/** 监听图片点击的block */
+@property (nonatomic, copy) void (^imageClickBlock)(NSDictionary *dict);
 
 /** contentView */
 @property (nonatomic, weak, readonly) UIView *contentView;
@@ -53,21 +68,7 @@ static NSString * const JKCycleBannerDataKey = @"JKCycleBannerDataKey";
 /** 是否手动设置pageControl的frame */
 @property (nonatomic, assign) BOOL manualPageControlFrame;
 
-/** 是否有缩放动画 默认没有 */
-@property (nonatomic, assign) BOOL scaleAnimated;
-
-/** 代理 */
-@property (nonatomic, weak) id<JKCycleBannerViewDelegate> delegate;
-
-/** 图片内缩的大小 */
-@property (nonatomic, assign) UIEdgeInsets contentInset;
-
-/** 图片的圆角大小 */
-@property (nonatomic, assign) CGFloat cornerRadius;
-
-/** 监听图片点击的block */
-@property (nonatomic, copy) void (^imageClickBlock)(NSDictionary *dict);
-
+/** 构造函数 */
 + (instancetype)recycleViewWithFrame:(CGRect)frame;
 
 /**
