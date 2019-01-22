@@ -1,5 +1,5 @@
 //
-//  JKRecycleView.h
+//  JKCycleBannerView.h
 //  JKAutoRecycleImages-OC
 //
 //  Created by albert on 16/9/5.
@@ -9,28 +9,28 @@
 #import <UIKit/UIKit.h>
 
 /** 图片 */
-static NSString * const JKRecycleImageUrlKey = @"JKRecycleImageUrlKey";
+static NSString * const JKCycleBannerImageUrlKey = @"JKCycleBannerImageUrlKey";
 
 /** 占位图片 */
-static NSString * const JKRecyclePlaceholderImageKey = @"JKRecyclePlaceholderImageKey";
+static NSString * const JKCycleBannerPlaceholderImageKey = @"JKCycleBannerPlaceholderImageKey";
 
 /** 标题 */
-static NSString * const JKRecycleTitleKey = @"JKRecycleTitleKey";
+static NSString * const JKCycleBannerTitleKey = @"JKCycleBannerTitleKey";
 
 /** 其他数据 */
-static NSString * const JKRecycleOtherDictKey = @"JKRecycleOtherDictKey";
+static NSString * const JKCycleBannerOtherDictKey = @"JKCycleBannerOtherDictKey";
 
-@class JKRecycleView;
+@class JKCycleBannerView;
 
-@protocol JKRecycleViewDelegate <NSObject>
+@protocol JKCycleBannerViewDelegate <NSObject>
 
 @optional
 
 /** 点击了轮播图 */
-- (void)recycleView:(JKRecycleView *)recycleView didClickImageWithDict:(NSDictionary *)dict;
+- (void)cycleBannerView:(JKCycleBannerView *)cycleBannerView didClickImageWithDict:(NSDictionary *)dict;
 @end
 
-@interface JKRecycleView : UIView
+@interface JKCycleBannerView : UIView
 
 /** 自动滚动的时间间隔（单位为s）默认3s 不可小于1s */
 @property (nonatomic, assign) NSTimeInterval autoRecycleInterval;
@@ -57,7 +57,7 @@ static NSString * const JKRecycleOtherDictKey = @"JKRecycleOtherDictKey";
 @property (nonatomic, assign) BOOL scaleAnimated;
 
 /** 代理 */
-@property (nonatomic, weak) id<JKRecycleViewDelegate> delegate;
+@property (nonatomic, weak) id<JKCycleBannerViewDelegate> delegate;
 
 /** 图片内缩的大小 */
 @property (nonatomic, assign) UIEdgeInsets contentInset;
@@ -73,8 +73,8 @@ static NSString * const JKRecycleOtherDictKey = @"JKRecycleOtherDictKey";
 /**
  * 设置数据
  * 数组中每个元素应是NSDictionary类型
- * NSDictionary必须有一个图片urlkey JKRecycleImageUrlKey
- * JKRecycleTitleKey和JKRecycleOtherDictKey可有可无
+ * NSDictionary必须有一个图片urlkey JKCycleBannerImageUrlKey
+ * JKCycleBannerTitleKey和JKCycleBannerOtherDictKey可有可无
  */
 - (void)setDataSource:(NSArray <NSDictionary *> *)dataSource;
 

@@ -7,11 +7,11 @@
 //
 
 #import "ViewController.h"
-#import "JKRecycleView.h"
+#import "JKCycleBannerView.h"
 
-@interface ViewController () <JKRecycleViewDelegate>
+@interface ViewController () <JKCycleBannerViewDelegate>
 
-@property (weak, nonatomic) IBOutlet JKRecycleView *recycleView;
+@property (weak, nonatomic) IBOutlet JKCycleBannerView *recycleView;
 @end
 
 @implementation ViewController
@@ -29,11 +29,11 @@
     //self.recycleView.scaleAnimated = YES;
     
     [self.recycleView setDataSource:@[
-                                      @{JKRecycleImageUrlKey : @"kenan01.jpg", JKRecycleTitleKey : @"kenan01-柯兰"},
-                                      @{JKRecycleImageUrlKey : @"kenan02.jpg", JKRecycleTitleKey : @"kenan02-柯哀"}]];/*,
-                                      @{JKRecycleImageUrlKey : @"kenan03.jpg", JKRecycleTitleKey : @"kenan03-柯兰"},
-                                      @{JKRecycleImageUrlKey : @"kenan04.jpg", JKRecycleTitleKey : @"kenan04-新兰"},
-                                      @{JKRecycleImageUrlKey : @"kenan05.jpg", JKRecycleTitleKey : @"kenan05-全家福"}]]; //*/
+                                      @{JKCycleBannerImageUrlKey : @"kenan01.jpg", JKCycleBannerTitleKey : @"kenan01-柯兰"},
+                                      @{JKCycleBannerImageUrlKey : @"kenan02.jpg", JKCycleBannerTitleKey : @"kenan02-柯哀"},
+                                      @{JKCycleBannerImageUrlKey : @"kenan03.jpg", JKCycleBannerTitleKey : @"kenan03-柯兰"},
+                                      @{JKCycleBannerImageUrlKey : @"kenan04.jpg", JKCycleBannerTitleKey : @"kenan04-新兰"},
+                                      @{JKCycleBannerImageUrlKey : @"kenan05.jpg", JKCycleBannerTitleKey : @"kenan05-全家福"}]]; //*/
 }
 
 #pragma mark - 按钮点击
@@ -48,11 +48,11 @@
     [self.recycleView removeTimer];
 }
 
-#pragma mark - JKRecycleViewDelegate
+#pragma mark - JKCycleBannerViewDelegate
 
-- (void)recycleView:(JKRecycleView *)recycleView didClickImageWithDict:(NSDictionary *)dict{
+- (void)cycleBannerView:(JKCycleBannerView *)cycleBannerView didClickImageWithDict:(NSDictionary *)dict{
     
-    NSString *message = [NSString stringWithFormat:@"%@", dict[JKRecycleTitleKey]];
+    NSString *message = [NSString stringWithFormat:@"%@", dict[JKCycleBannerTitleKey]];
     
     UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:(UIAlertControllerStyleAlert)];
     

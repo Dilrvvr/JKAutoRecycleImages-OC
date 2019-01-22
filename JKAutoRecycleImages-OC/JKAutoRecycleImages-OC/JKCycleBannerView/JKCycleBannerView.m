@@ -1,25 +1,25 @@
 //
-//  JKRecycleView.m
+//  JKCycleBannerView.m
 //  JKAutoRecycleImages-OC
 //
 //  Created by albert on 16/9/5.
 //  Copyright © 2016年 albert. All rights reserved.
 //  自动无限轮播
 
-#import "JKRecycleView.h"
+#import "JKCycleBannerView.h"
 
 #pragma mark - -------------cell-------------
 
-@interface JKRecycleCell : UICollectionViewCell
+@interface JKCycleBannerCell : UICollectionViewCell
 
 - (void)bindDict:(NSDictionary *)dict
     contentInset:(UIEdgeInsets)contentInset
     cornerRadius:(CGFloat)cornerRadius;
 @end
 
-#pragma mark - -------------JKRecycleView-------------
+#pragma mark - -------------JKCycleBannerView-------------
 
-@interface JKRecycleView () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface JKCycleBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
 {
     UIView *_contentView;
     UIPageControl *_pageControl;
@@ -36,11 +36,11 @@
 @property (nonatomic, strong) NSMutableArray *dataSourceArr;
 @end
 
-@implementation JKRecycleView
+@implementation JKCycleBannerView
 
 + (instancetype)recycleViewWithFrame:(CGRect)frame{
     
-    JKRecycleView *recycleView = [[JKRecycleView alloc] initWithFrame:frame];
+    JKCycleBannerView *recycleView = [[JKCycleBannerView alloc] initWithFrame:frame];
     
     recycleView.flowlayout.itemSize = CGSizeMake(frame.size.width + 2, frame.size.height);
     
@@ -66,8 +66,8 @@
 /**
  * 设置数据
  * 数组中每个元素应是NSDictionary类型
- * NSDictionary必须有一个图片urlkey JKRecycleImageUrlKey
- * JKRecycleTitleKey和JKRecycleOtherDictKey可有可无
+ * NSDictionary必须有一个图片urlkey JKCycleBannerImageUrlKey
+ * JKCycleBannerTitleKey和JKCycleBannerOtherDictKey可有可无
  */
 - (void)setDataSource:(NSArray <NSDictionary *> *)dataSource{
     
@@ -246,7 +246,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    JKRecycleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([JKRecycleCell class]) forIndexPath:indexPath];
+    JKCycleBannerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([JKCycleBannerCell class]) forIndexPath:indexPath];
     
     [cell bindDict:self.dataSourceArr[indexPath.item] contentInset:self.contentInset cornerRadius:self.cornerRadius];
     
@@ -260,9 +260,9 @@
     
     !self.imageClickBlock ? : self.imageClickBlock(self.dataSourceArr[indexPath.item]);
     
-    if ([self.delegate respondsToSelector:@selector(recycleView:didClickImageWithDict:)]) {
+    if ([self.delegate respondsToSelector:@selector(cycleBannerViewcycleBannerView:didClickImageWithDict:)]) {
         
-        [self.delegate recycleView:self didClickImageWithDict:self.dataSourceArr[indexPath.item]];
+        [self.delegate cycleBannerView:self didClickImageWithDict:self.dataSourceArr[indexPath.item]];
     }
 }
 
@@ -430,7 +430,7 @@
         collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
         [self.contentView insertSubview:collectionView atIndex:0];
         
-        [collectionView registerClass:[JKRecycleCell class] forCellWithReuseIdentifier:NSStringFromClass([JKRecycleCell class])];
+        [collectionView registerClass:[JKCycleBannerCell class] forCellWithReuseIdentifier:NSStringFromClass([JKCycleBannerCell class])];
         
         //        collectionView.translatesAutoresizingMaskIntoConstraints = NO;
         //        NSArray *collectionViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
@@ -468,7 +468,7 @@
 
 #pragma mark - -------------cell-------------
 
-@interface JKRecycleCell ()
+@interface JKCycleBannerCell ()
 
 /** dict */
 @property (nonatomic, copy, readonly) NSDictionary *dict;
@@ -492,7 +492,7 @@
 @property (nonatomic, weak) UILabel *titleLabel;
 @end
 
-@implementation JKRecycleCell
+@implementation JKCycleBannerCell
 
 #pragma mark
 #pragma mark - 初始化
@@ -575,23 +575,23 @@
     
     [self updateUIWithContentInset:contentInset cornerRadius:cornerRadius];
     
-    self.imageView.image = [UIImage imageNamed:_dict[JKRecycleImageUrlKey]];
+    self.imageView.image = [UIImage imageNamed:_dict[JKCycleBannerImageUrlKey]];
     
     /*
-    id imageUrl = _dict[JKRecycleImageUrlKey];
+    id imageUrl = _dict[JKCycleBannerImageUrlKey];
     
-    UIImage *placeholderImage = dict[JKRecyclePlaceholderImageKey];
+    UIImage *placeholderImage = dict[JKCycleBannerPlaceholderImageKey];
     
     [self.imageView sd_setImageWithURL:[imageUrl isKindOfClass:[NSString class]] ? [NSURL URLWithString:imageUrl] : imageUrl placeholderImage:[placeholderImage isKindOfClass:[UIImage class]] ? placeholderImage : nil]; //*/
     
-    if (_dict[JKRecycleTitleKey] == nil) {
+    if (_dict[JKCycleBannerTitleKey] == nil) {
         
         _titleLabel.hidden = YES;
         
         return;
     }
     
-    self.titleLabel.text = [NSString stringWithFormat:@"%@", _dict[JKRecycleTitleKey]];
+    self.titleLabel.text = [NSString stringWithFormat:@"%@", _dict[JKCycleBannerTitleKey]];
     
     self.titleLabel.hidden = NO;
 }

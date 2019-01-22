@@ -15,7 +15,7 @@
 		506FBF5A1D7DD6CA00416A99 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF581D7DD6CA00416A99 /* LaunchScreen.storyboard */; };
 		506FBF651D7DD6CA00416A99 /* JKAutoRecycleImages_OCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF641D7DD6CA00416A99 /* JKAutoRecycleImages_OCTests.m */; };
 		506FBF701D7DD6CA00416A99 /* JKAutoRecycleImages_OCUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF6F1D7DD6CA00416A99 /* JKAutoRecycleImages_OCUITests.m */; };
-		506FBF7F1D7DD6D900416A99 /* JKRecycleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF7E1D7DD6D900416A99 /* JKRecycleView.m */; };
+		506FBF7F1D7DD6D900416A99 /* JKCycleBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 506FBF7E1D7DD6D900416A99 /* JKCycleBannerView.m */; };
 		506FBF861D7DD81400416A99 /* kenan01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF811D7DD81400416A99 /* kenan01.jpg */; };
 		506FBF871D7DD81400416A99 /* kenan02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF821D7DD81400416A99 /* kenan02.jpg */; };
 		506FBF881D7DD81400416A99 /* kenan03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 506FBF831D7DD81400416A99 /* kenan03.jpg */; };
@@ -57,8 +57,8 @@
 		506FBF6B1D7DD6CA00416A99 /* JKAutoRecycleImages-OCUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "JKAutoRecycleImages-OCUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		506FBF6F1D7DD6CA00416A99 /* JKAutoRecycleImages_OCUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JKAutoRecycleImages_OCUITests.m; sourceTree = "<group>"; };
 		506FBF711D7DD6CA00416A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		506FBF7D1D7DD6D900416A99 /* JKRecycleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKRecycleView.h; sourceTree = "<group>"; };
-		506FBF7E1D7DD6D900416A99 /* JKRecycleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKRecycleView.m; sourceTree = "<group>"; };
+		506FBF7D1D7DD6D900416A99 /* JKCycleBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKCycleBannerView.h; sourceTree = "<group>"; };
+		506FBF7E1D7DD6D900416A99 /* JKCycleBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKCycleBannerView.m; sourceTree = "<group>"; };
 		506FBF811D7DD81400416A99 /* kenan01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kenan01.jpg; sourceTree = "<group>"; };
 		506FBF821D7DD81400416A99 /* kenan02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kenan02.jpg; sourceTree = "<group>"; };
 		506FBF831D7DD81400416A99 /* kenan03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kenan03.jpg; sourceTree = "<group>"; };
@@ -119,8 +119,7 @@
 				506FBF4E1D7DD6CA00416A99 /* AppDelegate.m */,
 				506FBF501D7DD6CA00416A99 /* ViewController.h */,
 				506FBF511D7DD6CA00416A99 /* ViewController.m */,
-				506FBF7D1D7DD6D900416A99 /* JKRecycleView.h */,
-				506FBF7E1D7DD6D900416A99 /* JKRecycleView.m */,
+				508A559221F6C95A007AE221 /* JKCycleBannerView */,
 				506FBF531D7DD6CA00416A99 /* Main.storyboard */,
 				506FBF561D7DD6CA00416A99 /* Assets.xcassets */,
 				506FBF581D7DD6CA00416A99 /* LaunchScreen.storyboard */,
@@ -166,6 +165,15 @@
 				506FBF851D7DD81400416A99 /* kenan05.jpg */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		508A559221F6C95A007AE221 /* JKCycleBannerView */ = {
+			isa = PBXGroup;
+			children = (
+				506FBF7D1D7DD6D900416A99 /* JKCycleBannerView.h */,
+				506FBF7E1D7DD6D900416A99 /* JKCycleBannerView.m */,
+			);
+			path = JKCycleBannerView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -307,7 +315,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				506FBF521D7DD6CA00416A99 /* ViewController.m in Sources */,
-				506FBF7F1D7DD6D900416A99 /* JKRecycleView.m in Sources */,
+				506FBF7F1D7DD6D900416A99 /* JKCycleBannerView.m in Sources */,
 				506FBF4F1D7DD6CA00416A99 /* AppDelegate.m in Sources */,
 				506FBF4C1D7DD6CA00416A99 /* main.m in Sources */,
 			);
