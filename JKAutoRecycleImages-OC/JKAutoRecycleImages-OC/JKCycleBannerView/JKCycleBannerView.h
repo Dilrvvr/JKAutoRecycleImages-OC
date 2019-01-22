@@ -8,17 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-/** 图片 */
+/** 图片 value对应NSString类型 */
 static NSString * const JKCycleBannerImageUrlKey = @"JKCycleBannerImageUrlKey";
 
-/** 占位图片 */
+/** 占位图片 value对应UIImage类型 */
 static NSString * const JKCycleBannerPlaceholderImageKey = @"JKCycleBannerPlaceholderImageKey";
 
-/** 标题 */
+/** 标题 value对应NSString类型 */
 static NSString * const JKCycleBannerTitleKey = @"JKCycleBannerTitleKey";
 
-/** 其他数据 */
-static NSString * const JKCycleBannerOtherDictKey = @"JKCycleBannerOtherDictKey";
+/** 其他数据 value对应任意类型 */
+static NSString * const JKCycleBannerDataKey = @"JKCycleBannerDataKey";
 
 @class JKCycleBannerView;
 
@@ -73,7 +73,7 @@ static NSString * const JKCycleBannerOtherDictKey = @"JKCycleBannerOtherDictKey"
 /**
  * 设置数据
  * 数组中每个元素应是NSDictionary类型
- * NSDictionary必须有一个图片urlkey JKCycleBannerImageUrlKey
+ * NSDictionary必须有一个图片url的key JKCycleBannerImageUrlKey
  * JKCycleBannerTitleKey和JKCycleBannerOtherDictKey可有可无
  */
 - (void)setDataSource:(NSArray <NSDictionary *> *)dataSource;

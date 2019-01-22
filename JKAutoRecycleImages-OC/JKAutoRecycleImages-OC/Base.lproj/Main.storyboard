@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -24,60 +25,42 @@
                                 <rect key="frame" x="47.5" y="330" width="100" height="40"/>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="BK4-CP-b6C"/>
-                                    <constraint firstAttribute="width" constant="80" id="Pau-Z8-cOf"/>
-                                    <constraint firstAttribute="width" constant="100" id="daZ-89-oLL"/>
-                                    <constraint firstAttribute="height" constant="50" id="pcc-7k-Kjc"/>
+                                    <constraint firstAttribute="height" constant="40" id="EAr-Oi-P8r"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="ENW-Pg-0eK"/>
                                 </constraints>
                                 <state key="normal" title="开始"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="Pau-Z8-cOf"/>
-                                        <exclude reference="pcc-7k-Kjc"/>
-                                    </mask>
-                                </variation>
                                 <connections>
                                     <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3y0-8j-yaz"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hf7-Yo-pw7">
-                                <rect key="frame" x="227.5" y="330" width="100" height="40"/>
-                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="92j-Os-7II"/>
-                                    <constraint firstAttribute="height" constant="40" id="Hvk-C0-p7z"/>
-                                    <constraint firstAttribute="height" constant="50" id="u7p-uX-aTd"/>
-                                    <constraint firstAttribute="width" constant="80" id="zsp-4f-iEH"/>
-                                </constraints>
-                                <state key="normal" title="停止"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="92j-Os-7II"/>
-                                        <exclude reference="u7p-uX-aTd"/>
-                                        <exclude reference="zsp-4f-iEH"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="stop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7fr-x4-xLM"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yaj-jb-7tY" customClass="JKCycleBannerView">
                                 <rect key="frame" x="27.5" y="120" width="320" height="180"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="320" id="Xol-RK-vNi"/>
                                     <constraint firstAttribute="height" constant="180" id="wyV-ul-aCb"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hf7-Yo-pw7">
+                                <rect key="frame" x="227.5" y="330" width="100" height="40"/>
+                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="停止"/>
+                                <connections>
+                                    <action selector="stop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7fr-x4-xLM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Hf7-Yo-pw7" firstAttribute="width" secondItem="KjW-si-4N7" secondAttribute="width" id="0Ok-3X-NCq"/>
-                            <constraint firstItem="KjW-si-4N7" firstAttribute="top" secondItem="Yaj-jb-7tY" secondAttribute="bottom" constant="30" id="DxI-EP-xW6"/>
-                            <constraint firstItem="Hf7-Yo-pw7" firstAttribute="trailing" secondItem="Yaj-jb-7tY" secondAttribute="trailing" constant="-20" id="PQ2-86-WnP"/>
+                            <constraint firstItem="Hf7-Yo-pw7" firstAttribute="height" secondItem="KjW-si-4N7" secondAttribute="height" id="46G-Z3-vUZ"/>
                             <constraint firstItem="Yaj-jb-7tY" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="100" id="S0h-hL-pmc"/>
-                            <constraint firstItem="KjW-si-4N7" firstAttribute="leading" secondItem="Yaj-jb-7tY" secondAttribute="leading" constant="20" id="WSE-bS-5UV"/>
-                            <constraint firstItem="Hf7-Yo-pw7" firstAttribute="top" secondItem="KjW-si-4N7" secondAttribute="top" id="cjP-yk-umU"/>
+                            <constraint firstItem="Hf7-Yo-pw7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KjW-si-4N7" secondAttribute="trailing" constant="8" symbolic="YES" id="Ufe-0h-LfU"/>
+                            <constraint firstItem="KjW-si-4N7" firstAttribute="top" secondItem="Yaj-jb-7tY" secondAttribute="bottom" constant="30" id="avT-g8-GxU"/>
+                            <constraint firstItem="Hf7-Yo-pw7" firstAttribute="top" secondItem="KjW-si-4N7" secondAttribute="top" id="g24-ud-87z"/>
+                            <constraint firstItem="KjW-si-4N7" firstAttribute="leading" secondItem="Yaj-jb-7tY" secondAttribute="leading" constant="20" id="kwG-aI-fIv"/>
+                            <constraint firstItem="Hf7-Yo-pw7" firstAttribute="width" secondItem="KjW-si-4N7" secondAttribute="width" id="r8C-gD-gUx"/>
                             <constraint firstItem="Yaj-jb-7tY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="s8n-oB-e14"/>
+                            <constraint firstItem="Hf7-Yo-pw7" firstAttribute="trailing" secondItem="Yaj-jb-7tY" secondAttribute="trailing" constant="-20" id="xGc-cd-HBd"/>
                         </constraints>
                     </view>
                     <connections>

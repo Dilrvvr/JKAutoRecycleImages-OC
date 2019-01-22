@@ -23,7 +23,6 @@
 {
     UIView *_contentView;
     UIPageControl *_pageControl;
-    NSInteger _pagesCount;
 }
 
 /** collectionView */
@@ -34,6 +33,9 @@
 
 /** dataSourceArr */
 @property (nonatomic, strong) NSMutableArray *dataSourceArr;
+
+/** pagesCount */
+@property (nonatomic, assign) NSInteger pagesCount;
 @end
 
 @implementation JKCycleBannerView
@@ -260,7 +262,7 @@
     
     !self.imageClickBlock ? : self.imageClickBlock(self.dataSourceArr[indexPath.item]);
     
-    if ([self.delegate respondsToSelector:@selector(cycleBannerViewcycleBannerView:didClickImageWithDict:)]) {
+    if ([self.delegate respondsToSelector:@selector(cycleBannerView:didClickImageWithDict:)]) {
         
         [self.delegate cycleBannerView:self didClickImageWithDict:self.dataSourceArr[indexPath.item]];
     }
@@ -324,7 +326,7 @@
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 
-                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_pagesCount inSection:0]];
+                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.pagesCount inSection:0]];
                 
                 [UIView animateWithDuration:0.25 animations:^{
                     
