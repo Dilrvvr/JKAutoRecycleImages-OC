@@ -1,8 +1,8 @@
 # JKAutoRecycleImages-OC
 ### 无限轮播图-OC
-### 点击查看[Swift版](https://github.com/Jacky-An/JKAutoRecycleImages-Swift/ "Title") 
+### 点击查看[Swift版](https://github.com/Dilrvvr/JKAutoRecycleImages-Swift/ "Title") 
 ***
-![image](https://github.com/Jacky-An/JKAutoRecycleImages-OC/raw/master/introductionimages/introduction.gif)
+![image](https://github.com/Dilrvvr/JKAutoRecycleImages-OC/raw/master/introductionimages/introduction.gif)
 ***
 
 * 之前的实现思路是使用UIScrollView。
