@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-/** 图片 value对应NSString类型 */
+/** 图片 value对应NSString类型 可传imageName 内部默认[UIImage ImageNamed:] */
 static NSString * const JKCycleBannerImageUrlKey = @"JKCycleBannerImageUrlKey";
 
 /** 占位图片 value对应UIImage类型 */
@@ -25,6 +25,9 @@ static NSString * const JKCycleBannerDataKey = @"JKCycleBannerDataKey";
 @protocol JKCycleBannerViewDelegate <NSObject>
 
 @optional
+
+/** 自定义加载图片 */
+- (void)cycleBannerView:(JKCycleBannerView *)cycleBannerView loadImageWithImageView:(UIImageView *)imageView dict:(NSDictionary *)dict;
 
 /** 点击了轮播图 */
 - (void)cycleBannerView:(JKCycleBannerView *)cycleBannerView didClickImageWithDict:(NSDictionary *)dict;
@@ -52,6 +55,9 @@ static NSString * const JKCycleBannerDataKey = @"JKCycleBannerDataKey";
 
 /** 监听图片点击的block */
 @property (nonatomic, copy) void (^imageClickBlock)(NSDictionary *dict);
+
+/** 自定义加载图片 */
+@property (nonatomic, copy) void (^loadImageBlock)(UIImageView *imageView, NSDictionary *dict);
 
 /** contentView */
 @property (nonatomic, weak, readonly) UIView *contentView;
