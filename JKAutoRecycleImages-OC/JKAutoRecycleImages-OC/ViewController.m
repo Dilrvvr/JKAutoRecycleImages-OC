@@ -29,12 +29,11 @@
     //self.recycleView.scaleAnimated = YES;
     
     [self.recycleView setDataSource:@[
-        @{JKCycleBannerImageUrlKey : @"kenan01.jpg", JKCycleBannerTitleKey : @"kenan01-柯兰"},
-        @{JKCycleBannerImageUrlKey : @"kenan02.jpg", JKCycleBannerTitleKey : @"kenan02-柯哀"},
-        @{JKCycleBannerImageUrlKey : @"kenan03.jpg", JKCycleBannerTitleKey : @"kenan03-柯兰"},
-        @{JKCycleBannerImageUrlKey : @"kenan04.jpg", JKCycleBannerTitleKey : @"kenan04-新兰"},
-        @{JKCycleBannerImageUrlKey : @"kenan05.jpg", JKCycleBannerTitleKey : @"kenan05-全家福"}]
-     ];
+                                      @{JKCycleBannerImageUrlKey : @"kenan01.jpg", JKCycleBannerTitleKey : @"kenan01-柯兰"},
+                                      @{JKCycleBannerImageUrlKey : @"kenan02.jpg", JKCycleBannerTitleKey : @"kenan02-柯哀"},
+                                      @{JKCycleBannerImageUrlKey : @"kenan03.jpg", JKCycleBannerTitleKey : @"kenan03-柯兰"},
+                                      @{JKCycleBannerImageUrlKey : @"kenan04.jpg", JKCycleBannerTitleKey : @"kenan04-新兰"},
+                                      @{JKCycleBannerImageUrlKey : @"kenan05.jpg", JKCycleBannerTitleKey : @"kenan05-全家福"}]]; //*/
 }
 
 #pragma mark - 按钮点击

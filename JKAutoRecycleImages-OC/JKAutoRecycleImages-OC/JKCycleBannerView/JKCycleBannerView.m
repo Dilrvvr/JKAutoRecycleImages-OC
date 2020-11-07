@@ -8,7 +8,6 @@
 
 #import "JKCycleBannerView.h"
 
-#pragma mark
 #pragma mark - -------------cell-------------
 
 @interface JKCycleBannerCell : UICollectionViewCell
@@ -18,7 +17,6 @@
     cornerRadius:(CGFloat)cornerRadius;
 @end
 
-#pragma mark
 #pragma mark - -------------JKCycleBannerView-------------
 
 @interface JKCycleBannerView () <UICollectionViewDataSource, UICollectionViewDelegate>
@@ -42,9 +40,6 @@
 
 @implementation JKCycleBannerView
 
-#pragma mark
-#pragma mark - Public Methods
-
 + (instancetype)recycleViewWithFrame:(CGRect)frame{
     
     JKCycleBannerView *recycleView = [[JKCycleBannerView alloc] initWithFrame:frame];
@@ -54,21 +49,22 @@
     return recycleView;
 }
 
-- (void)setAutoRecycle:(BOOL)autoRecycle{
-    _autoRecycle = autoRecycle;
+- (void)dealloc{
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [self removeTimer];
-    [self addTimer];
+    
+    NSLog(@"%d, %s",__LINE__, __func__);
 }
 
-- (void)setAutoRecycleInterval:(NSTimeInterval)autoRecycleInterval{
+- (void)didMoveToSuperview{
+    [super didMoveToSuperview];
     
-    if (autoRecycleInterval < 1) return;
-    
-    _autoRecycleInterval = autoRecycleInterval;
-    
-    [self removeTimer];
-    [self addTimer];
+    if (!self.superview) {
+        
+        [self removeTimer];
+    }
 }
 
 /**
@@ -80,7 +76,6 @@
 - (void)setDataSource:(NSArray <NSDictionary *> *)dataSource{
     
     _pagesCount = dataSource.count;
-    
     self.pageControl.numberOfPages = _pagesCount;
     
     [self.dataSourceArr removeAllObjects];
@@ -123,9 +118,94 @@
     
         [self addTimer];
     });
+    
+    /*
+     [self.collectionView performBatchUpdates:^{
+     
+     [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+     
+     } completion:^(BOOL finished) {
+     
+     //[self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
+     
+     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0] atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:NO];
+     
+     [self addTimer];
+     }]; //*/
 }
 
-/// 添加定时器
+#pragma mark - 初始化
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        
+        [self initialization];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        
+        [self initialization];
+    }
+    return self;
+}
+
+- (void)initialization {
+    
+    // 初始化数据
+    _autoRecycleInterval = 3;
+    _autoRecycle = YES;
+    
+    // 初始化scrollView
+    [self collectionView];
+    
+    // 初始化pageControl
+    //[self pageControl];
+    
+    //    UILabel *tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
+    //    tipLabel.text = @"此处应有图片";
+    //    tipLabel.textColor = [UIColor whiteColor];
+    //    tipLabel.textAlignment = NSTextAlignmentCenter;
+    //    [self insertSubview:tipLabel belowSubview:self.scrollView];
+    //    self.tipLabel = tipLabel;
+    
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+    //
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+//- (void)willResignActive{
+//    [self removeTimer];
+//}
+//
+//- (void)didBecomeActive{
+//    [self addTimer];
+//}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    
+    self.contentView.frame = self.bounds;
+    self.collectionView.frame = CGRectMake(-1, 0, self.contentView.bounds.size.width + 2, self.contentView.bounds.size.height);
+    
+    self.flowlayout.itemSize = self.collectionView.bounds.size;
+    
+    if (!_manualPageControlFrame) {
+        
+        if (self.pageControlInBottomInset) {
+            
+            self.pageControl.frame = CGRectMake(0, self.bounds.size.height - self.contentInset.bottom + (self.contentInset.bottom - 20) * 0.5, self.bounds.size.width, 20);
+            
+        } else {
+            
+            self.pageControl.frame = CGRectMake(0, self.bounds.size.height - 20 - self.contentInset.bottom, self.bounds.size.width, 20);
+        }
+    }
+}
+
+#pragma mark - 添加定时器
 - (void)addTimer {
     
     if (!_autoRecycle ||
@@ -148,94 +228,29 @@
     }
 }
 
-/// 移除定时器
+#pragma mark - 移除定时器
 - (void)removeTimer {
     
     [self.timer invalidate];
     self.timer = nil;
 }
 
-#pragma mark
-#pragma mark - Override
-
-- (void)dealloc {
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [self removeTimer];
-    
-    // TODO: - JKTODO delete
-    NSLog(@"[ClassName: %@], %d, %s", NSStringFromClass([self class]), __LINE__, __func__);
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        [self initialization];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super initWithCoder:aDecoder]) {
-        [self initialization];
-    }
-    return self;
-}
-
-- (void)didMoveToSuperview {
-    [super didMoveToSuperview];
-    
-    if (self.superview) { return; }
-    
-    [self removeTimer];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    self.contentView.frame = self.bounds;
-    self.collectionView.frame = CGRectMake(-1, 0, self.contentView.bounds.size.width + 2, self.contentView.bounds.size.height);
-    
-    self.flowlayout.itemSize = self.collectionView.bounds.size;
-    
-    if (_manualPageControlFrame) { return; }
-    
-    if (self.pageControlInBottomInset) {
-        
-        self.pageControl.frame = CGRectMake(0, self.bounds.size.height - self.contentInset.bottom + (self.contentInset.bottom - 20) * 0.5, self.bounds.size.width, 20);
-        
-    } else {
-        
-        self.pageControl.frame = CGRectMake(0, self.bounds.size.height - 20 - self.contentInset.bottom, self.bounds.size.width, 20);
-    }
-}
-
-#pragma mark
-#pragma mark - Private Methods
-
+#pragma mark - 循环滚动的方法
 - (void)startAutoRecycle {
     
     if (!self.timer || self.collectionView.isDragging) { return; }
     
     CGPoint newOffset = CGPointMake(_collectionView.contentOffset.x + _collectionView.bounds.size.width, 0);
-    
     [_collectionView setContentOffset:newOffset animated:YES];
 }
 
-#pragma mark
-#pragma mark - Private Selector
+#pragma mark - UICollectionViewDataSource
 
-
-
-#pragma mark
-#pragma mark - UICollectionViewDataSource & UICollectionViewDelegate
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return self.dataSourceArr.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     JKCycleBannerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([JKCycleBannerCell class]) forIndexPath:indexPath];
     
@@ -244,7 +259,9 @@
     return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+#pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     
     !self.imageClickBlock ? : self.imageClickBlock(self.dataSourceArr[indexPath.item]);
@@ -265,7 +282,9 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    if (!_scaleAnimated) { return; }
+    if (!_scaleAnimated) {
+        return;
+    }
     
     NSIndexPath *index = [collectionView indexPathsForVisibleItems].lastObject;
     
@@ -277,10 +296,10 @@
     }];
 }
 
-#pragma mark
-#pragma mark - UIScrollViewDelegate
+#pragma mark - ScrollView Delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
     
 }
 
@@ -290,12 +309,12 @@
     [self adjustContentOffset:scrollView];
 }
 
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
     
     [self adjustContentOffset:scrollView];
 }
 
-- (void)adjustContentOffset:(UIScrollView *)scrollView {
+- (void)adjustContentOffset:(UIScrollView *)scrollView{
     
     NSInteger page = (NSInteger)((scrollView.contentOffset.x + 5) / scrollView.bounds.size.width);
     
@@ -359,57 +378,46 @@
     [self addTimer];
 }
 
-#pragma mark
-#pragma mark - Initialization & Build UI
+#pragma mark - setter方法
 
-/** 初始化自身属性 交给子类重写 super自动调用该方法 */
-- (void)initializeProperty {
+- (void)setAutoRecycle:(BOOL)autoRecycle{
+    _autoRecycle = autoRecycle;
     
-    // 初始化数据
-    _autoRecycleInterval = 3;
-    _autoRecycle = YES;
+    [self removeTimer];
+    [self addTimer];
 }
 
-/** 构造函数初始化时调用 注意调用super */
-- (void)initialization {
+- (void)setAutoRecycleInterval:(NSTimeInterval)autoRecycleInterval{
     
-    [self initializeProperty];
-    [self createUI];
-    [self layoutUI];
-    [self initializeUIData];
+    if (autoRecycleInterval < 1) return;
+    
+    _autoRecycleInterval = autoRecycleInterval;
+    
+    [self removeTimer];
+    [self addTimer];
 }
 
-/** 创建UI 交给子类重写 super自动调用该方法 */
-- (void)createUI {
-    
-    // 初始化collectionView
-    [self collectionView];
-}
+#pragma mark - Property
 
-/** 布局UI 交给子类重写 super自动调用该方法 */
-- (void)layoutUI {
-    
-}
-
-/** 初始化UI数据 交给子类重写 super自动调用该方法 */
-- (void)initializeUIData {
-    
-}
-
-#pragma mark
-#pragma mark - Private Property
-
-- (UIView *)contentView {
+- (UIView *)contentView{
     if (!_contentView) {
         UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
         contentView.clipsToBounds = YES;
         [self insertSubview:contentView atIndex:0];
+        
+        //        contentView.translatesAutoresizingMaskIntoConstraints = NO;
+        //        NSArray *contentViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[contentView]-0-|" options:0 metrics:nil views:@{@"contentView" : contentView}];
+        //        [self addConstraints:contentViewCons1];
+        //
+        //        NSArray *contentViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[contentView]-0-|" options:0 metrics:nil views:@{@"contentView" : contentView}];
+        //        [self addConstraints:contentViewCons2];
+        
         _contentView = contentView;
     }
     return _contentView;
 }
 
-- (UICollectionView *)collectionView {
+- (UICollectionView *)collectionView{
     if (!_collectionView) {
         
         _flowlayout = [[UICollectionViewFlowLayout alloc] init];
@@ -427,7 +435,16 @@
         collectionView.showsVerticalScrollIndicator = NO;
         collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
         [self.contentView insertSubview:collectionView atIndex:0];
+        
         [collectionView registerClass:[JKCycleBannerCell class] forCellWithReuseIdentifier:NSStringFromClass([JKCycleBannerCell class])];
+        
+        //        collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+        //        NSArray *collectionViewCons1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
+        //        [self addConstraints:collectionViewCons1];
+        //
+        //        NSArray *collectionViewCons2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[collectionView]-0-|" options:0 metrics:nil views:@{@"collectionView" : collectionView}];
+        //        [self addConstraints:collectionViewCons2];
+        
         _collectionView = collectionView;
     }
     return _collectionView;
@@ -448,7 +465,7 @@
     return _pageControl;
 }
 
-- (NSMutableArray *)dataSourceArr {
+- (NSMutableArray *)dataSourceArr{
     if (!_dataSourceArr) {
         _dataSourceArr = [NSMutableArray array];
     }
@@ -457,7 +474,6 @@
 
 @end
 
-#pragma mark
 #pragma mark - -------------cell-------------
 
 @interface JKCycleBannerCell ()
@@ -481,7 +497,77 @@
 @implementation JKCycleBannerCell
 
 #pragma mark
-#pragma mark - Public Methods
+#pragma mark - 初始化
+
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]) {
+        [self initialization];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder{
+    if (self = [super initWithCoder:aDecoder]) {
+        [self initialization];
+    }
+    return self;
+}
+
+/** 初始化自身属性 交给子类重写 super自动调用该方法 */
+- (void)initializeProperty{
+    
+    self.contentInset = UIEdgeInsetsZero;
+}
+
+/** 构造函数初始化时调用 注意调用super */
+- (void)initialization{
+    
+    [self initializeProperty];
+    [self createUI];
+    [self layoutUI];
+    [self initializeUIData];
+}
+
+/** 创建UI 交给子类重写 super自动调用该方法 */
+- (void)createUI{
+    
+    UIView *containerView = [[UIView alloc] init];
+    [self.contentView insertSubview:containerView atIndex:0];
+    _containerView = containerView;
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.containerView addSubview:imageView];
+    _imageView = imageView;
+}
+
+/** 布局UI 交给子类重写 super自动调用该方法 */
+- (void)layoutUI{
+    
+    self.containerView.frame = CGRectMake(1, 0, CGRectGetWidth(self.contentView.frame) - 2, CGRectGetHeight(self.contentView.frame));
+    
+    self.imageView.frame = CGRectMake(self.contentInset.left, self.contentInset.top, CGRectGetWidth(self.containerView.frame) - self.contentInset.left - self.contentInset.right, CGRectGetHeight(self.containerView.frame) - self.contentInset.top - self.contentInset.bottom);
+    
+    if (!_titleLabel) { return; }
+    
+    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.containerView.bounds.size.width - 30 - self.contentInset.left - self.contentInset.right, INFINITY)];
+    
+    _titleLabel.frame = CGRectMake((CGRectGetWidth(self.containerView.frame) - labelSize.width) * 0.5, self.containerView.bounds.size.height - 20 - labelSize.height - self.contentInset.bottom, labelSize.width, labelSize.height);
+}
+
+/** 初始化UI数据 交给子类重写 super自动调用该方法 */
+- (void)initializeUIData{
+    
+}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    
+    [self layoutUI];
+}
+
+#pragma mark
+#pragma mark - 赋值
 
 - (void)bindDict:(NSDictionary *)dict
     contentInset:(UIEdgeInsets)contentInset
@@ -512,34 +598,8 @@
     self.titleLabel.hidden = NO;
 }
 
-#pragma mark
-#pragma mark - Override
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        [self initialization];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super initWithCoder:aDecoder]) {
-        [self initialization];
-    }
-    return self;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    [self layoutUI];
-}
-
-#pragma mark
-#pragma mark - Private Methods
-
 - (void)updateUIWithContentInset:(UIEdgeInsets)contentInset
-                    cornerRadius:(CGFloat)cornerRadius {
+                    cornerRadius:(CGFloat)cornerRadius{
     
     if (self.imageView.layer.cornerRadius != cornerRadius) {
         
@@ -556,64 +616,9 @@
 }
 
 #pragma mark
-#pragma mark - Private Selector
+#pragma mark - Property
 
-
-
-#pragma mark
-#pragma mark - Initialization & Build UI
-
-/** 初始化自身属性 交给子类重写 super自动调用该方法 */
-- (void)initializeProperty {
-    
-    self.contentInset = UIEdgeInsetsZero;
-}
-
-/** 构造函数初始化时调用 注意调用super */
-- (void)initialization {
-    
-    [self initializeProperty];
-    [self createUI];
-    [self layoutUI];
-    [self initializeUIData];
-}
-
-/** 创建UI 交给子类重写 super自动调用该方法 */
-- (void)createUI {
-    
-    UIView *containerView = [[UIView alloc] init];
-    [self.contentView insertSubview:containerView atIndex:0];
-    _containerView = containerView;
-    
-    UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    [self.containerView addSubview:imageView];
-    _imageView = imageView;
-}
-
-/** 布局UI 交给子类重写 super自动调用该方法 */
-- (void)layoutUI {
-    
-    self.containerView.frame = CGRectMake(1, 0, CGRectGetWidth(self.contentView.frame) - 2, CGRectGetHeight(self.contentView.frame));
-    
-    self.imageView.frame = CGRectMake(self.contentInset.left, self.contentInset.top, CGRectGetWidth(self.containerView.frame) - self.contentInset.left - self.contentInset.right, CGRectGetHeight(self.containerView.frame) - self.contentInset.top - self.contentInset.bottom);
-    
-    if (!_titleLabel) { return; }
-    
-    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.containerView.bounds.size.width - 30 - self.contentInset.left - self.contentInset.right, INFINITY)];
-    
-    _titleLabel.frame = CGRectMake((CGRectGetWidth(self.containerView.frame) - labelSize.width) * 0.5, self.containerView.bounds.size.height - 20 - labelSize.height - self.contentInset.bottom, labelSize.width, labelSize.height);
-}
-
-/** 初始化UI数据 交给子类重写 super自动调用该方法 */
-- (void)initializeUIData {
-    
-}
-
-#pragma mark
-#pragma mark - Private Property
-
-- (UILabel *)titleLabel {
+- (UILabel *)titleLabel{
     if (!_titleLabel) {
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.frame = CGRectMake(100, 20, 100, 30);
