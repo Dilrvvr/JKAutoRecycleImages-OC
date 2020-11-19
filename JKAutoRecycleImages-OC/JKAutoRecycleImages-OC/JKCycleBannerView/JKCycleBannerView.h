@@ -36,7 +36,7 @@ static NSString * const JKCycleBannerDataKey = @"JKCycleBannerDataKey";
 @interface JKCycleBannerView : UIView
 
 /** 是否自动循环 default is YES */
-@property (nonatomic, assign, getter=isAutoRecycle) BOOL autoRecycle;
+@property (nonatomic, assign) BOOL autoRecycle;
 
 /** 自动滚动的时间间隔（单位为s）默认3s 不可小于1s */
 @property (nonatomic, assign) NSTimeInterval autoRecycleInterval;

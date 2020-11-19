@@ -62,7 +62,8 @@
     
     JKCycleBannerView *recycleView = [[JKCycleBannerView alloc] initWithFrame:frame];
     
-    recycleView.flowlayout.itemSize = CGSizeMake(frame.size.width + 2, frame.size.height);
+    // collectionView宽度加2 但是实际图片是正常大小
+    recycleView.flowlayout.itemSize = CGSizeMake(frame.size.width + 2.0, frame.size.height);
     
     return recycleView;
 }
@@ -76,7 +77,7 @@
 
 - (void)setAutoRecycleInterval:(NSTimeInterval)autoRecycleInterval {
     
-    if (autoRecycleInterval < 1) return;
+    if (autoRecycleInterval < 1.0) return;
     
     _autoRecycleInterval = autoRecycleInterval;
     
@@ -132,7 +133,18 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0] atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:NO];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
+        
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:NO];
+        
+        if (self.scaleAnimated) {
+            
+            [self.collectionView layoutIfNeeded];
+            
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            
+            cell.transform = CGAffineTransformIdentity;
+        }
     
         [self addTimer];
     });
@@ -140,11 +152,14 @@
 
 - (void)addTimer {
     
-    if (!_autoRecycle ||
+    if (self.timer != nil ||
+        !_autoRecycle ||
         _pagesCount <= 1 ||
-        self.timer != nil ||
-        _autoRecycleInterval < 1 ||
-        self.collectionView.isDragging) { return; }
+        _autoRecycleInterval < 1.0 ||
+        self.collectionView.isDragging) {
+        
+        return;
+    }
     
     __weak typeof(self) weakSelf = self;
     
@@ -185,9 +200,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [self removeTimer];
-    
-    // TODO: - JKTODO delete
-    NSLog(@"[ClassName: %@], %d, %s", NSStringFromClass([self class]), __LINE__, __func__);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -216,7 +228,9 @@
     [super layoutSubviews];
     
     self.contentView.frame = self.bounds;
-    self.collectionView.frame = CGRectMake(-1, 0, self.contentView.bounds.size.width + 2, self.contentView.bounds.size.height);
+    
+    // collectionView宽度加2 但是实际图片是正常大小
+    self.collectionView.frame = CGRectMake(-1.0, 0.0, self.contentView.bounds.size.width + 2.0, self.contentView.bounds.size.height);
     
     self.flowlayout.itemSize = self.collectionView.bounds.size;
     
@@ -224,11 +238,11 @@
     
     if (self.pageControlInBottomInset) {
         
-        self.pageControl.frame = CGRectMake(0, self.bounds.size.height - self.contentInset.bottom + (self.contentInset.bottom - 20) * 0.5, self.bounds.size.width, 20);
+        self.pageControl.frame = CGRectMake(0.0, self.bounds.size.height - self.contentInset.bottom + (self.contentInset.bottom - 20.0) * 0.5, self.bounds.size.width, 20.0);
         
     } else {
         
-        self.pageControl.frame = CGRectMake(0, self.bounds.size.height - 20 - self.contentInset.bottom, self.bounds.size.width, 20);
+        self.pageControl.frame = CGRectMake(0.0, self.bounds.size.height - 20.0 - self.contentInset.bottom, self.bounds.size.width, 20.0);
     }
 }
 
@@ -239,7 +253,7 @@
     
     if (!self.timer || self.collectionView.isDragging) { return; }
     
-    CGPoint newOffset = CGPointMake(_collectionView.contentOffset.x + _collectionView.bounds.size.width, 0);
+    CGPoint newOffset = CGPointMake(_collectionView.contentOffset.x + _collectionView.bounds.size.width, 0.0);
     
     [_collectionView setContentOffset:newOffset animated:YES];
 }
@@ -261,9 +275,9 @@
     
     JKCycleBannerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([JKCycleBannerCell class]) forIndexPath:indexPath];
     
-    [cell bindDict:self.dataSourceArr[indexPath.item] contentInset:self.contentInset cornerRadius:self.cornerRadius];
-    
     cell.delegate = self;
+    
+    [cell bindDict:self.dataSourceArr[indexPath.item] contentInset:self.contentInset cornerRadius:self.cornerRadius];
     
     return cell;
 }
@@ -392,6 +406,8 @@
         
         self.pageControl.currentPage = page - 1;
     }
+    
+    [self addTimer];
 }
 
 // 手指拖动 移除定时器
@@ -412,7 +428,23 @@
 /** 自定义加载图片 */
 - (BOOL)bannerCell:(JKCycleBannerCell *)bannerCell loadImageWithImageView:(UIImageView *)imageView dict:(NSDictionary *)dict {
     
-    return !!self.loadImageBlock || [self.delegate respondsToSelector:@selector(bannerCell:loadImageWithImageView:dict:)];
+    BOOL respondFlag = [self.delegate respondsToSelector:@selector(cycleBannerView:loadImageWithImageView:dict:)];
+    
+    if (respondFlag) {
+        
+        [self.delegate cycleBannerView:self loadImageWithImageView:imageView dict:dict];
+    }
+    
+    BOOL blockFlag = NO;
+    
+    if (self.loadImageBlock) {
+        
+        blockFlag = YES;
+        
+        self.loadImageBlock(imageView, dict);
+    }
+    
+    return blockFlag || respondFlag;
 }
 
 #pragma mark
@@ -422,7 +454,7 @@
 - (void)initializeProperty {
     
     // 初始化数据
-    _autoRecycleInterval = 3;
+    _autoRecycleInterval = 3.0;
     _autoRecycle = YES;
 }
 
@@ -438,7 +470,7 @@
 /** 创建UI 交给子类重写 super自动调用该方法 */
 - (void)createUI {
     
-    // 初始化scrollView
+    // 初始化collectionView
     [self collectionView];
 }
 
@@ -470,8 +502,8 @@
         
         _flowlayout = [[UICollectionViewFlowLayout alloc] init];
         _flowlayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        _flowlayout.minimumLineSpacing = 0;
-        _flowlayout.minimumInteritemSpacing = 0;
+        _flowlayout.minimumLineSpacing = 0.0;
+        _flowlayout.minimumInteritemSpacing = 0.0;
         
         UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_flowlayout];
         collectionView.backgroundColor = nil;
@@ -491,7 +523,7 @@
 
 - (UIPageControl *)pageControl {
     if (!_pageControl) {
-        UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.bounds.size.height - 20 - self.contentInset.bottom, self.bounds.size.width, 20)];
+        UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.bounds.size.height - 20.0 - self.contentInset.bottom, self.bounds.size.width, 20.0)];
         pageControl.hidesForSinglePage = YES;
         pageControl.userInteractionEnabled = NO;
         pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
@@ -649,15 +681,16 @@
 /** 布局UI 交给子类重写 super自动调用该方法 */
 - (void)layoutUI {
     
-    self.containerView.frame = CGRectMake(1, 0, CGRectGetWidth(self.contentView.frame) - 2, CGRectGetHeight(self.contentView.frame));
+    // collectionView的宽度加了2 这里还原
+    self.containerView.frame = CGRectMake(1.0, 0.0, CGRectGetWidth(self.contentView.frame) - 2.0, CGRectGetHeight(self.contentView.frame));
     
     self.imageView.frame = CGRectMake(self.contentInset.left, self.contentInset.top, CGRectGetWidth(self.containerView.frame) - self.contentInset.left - self.contentInset.right, CGRectGetHeight(self.containerView.frame) - self.contentInset.top - self.contentInset.bottom);
     
     if (!_titleLabel) { return; }
     
-    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.containerView.bounds.size.width - 30 - self.contentInset.left - self.contentInset.right, INFINITY)];
+    CGSize labelSize = [_titleLabel sizeThatFits:CGSizeMake(self.containerView.bounds.size.width - 30.0 - self.contentInset.left - self.contentInset.right, INFINITY)];
     
-    _titleLabel.frame = CGRectMake((CGRectGetWidth(self.containerView.frame) - labelSize.width) * 0.5, self.containerView.bounds.size.height - 20 - labelSize.height - self.contentInset.bottom, labelSize.width, labelSize.height);
+    _titleLabel.frame = CGRectMake((CGRectGetWidth(self.containerView.frame) - labelSize.width) * 0.5, self.containerView.bounds.size.height - 20.0 - labelSize.height - self.contentInset.bottom, labelSize.width, labelSize.height);
 }
 
 /** 初始化UI数据 交给子类重写 super自动调用该方法 */
@@ -671,12 +704,12 @@
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.frame = CGRectMake(100, 20, 100, 30);
+        titleLabel.frame = CGRectMake(100.0, 20.0, 100.0, 30.0);
         titleLabel.textAlignment = NSTextAlignmentCenter;
-        titleLabel.numberOfLines = 0;
-        titleLabel.font = [UIFont boldSystemFontOfSize:20];
+        titleLabel.numberOfLines = 0.0;
+        titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
         titleLabel.shadowColor = [UIColor darkGrayColor];
-        titleLabel.shadowOffset = CGSizeMake(1, 0);
+        titleLabel.shadowOffset = CGSizeMake(1.0, 0.0);
         titleLabel.textColor = [UIColor whiteColor];
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
