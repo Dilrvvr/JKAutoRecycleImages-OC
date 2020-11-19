@@ -23,9 +23,6 @@
 
 @interface JKCycleBannerCell : UICollectionViewCell
 
-/** 自定义加载图片 */
-@property (nonatomic, copy) void (^loadImageBlock)(UIImageView *imageView, NSDictionary *dict);
-
 /** delegate */
 @property (nonatomic, weak) id<JKCycleBannerCellDelegate> delegate;
 
@@ -139,20 +136,6 @@
     
         [self addTimer];
     });
-    
-    /*
-     [self.collectionView performBatchUpdates:^{
-     
-     [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-     
-     } completion:^(BOOL finished) {
-     
-     //[self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
-     
-     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0] atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:NO];
-     
-     [self addTimer];
-     }]; //*/
 }
 
 - (void)addTimer {
@@ -160,7 +143,8 @@
     if (!_autoRecycle ||
         _pagesCount <= 1 ||
         self.timer != nil ||
-        _autoRecycleInterval < 1) return;
+        _autoRecycleInterval < 1 ||
+        self.collectionView.isDragging) { return; }
     
     __weak typeof(self) weakSelf = self;
     
@@ -360,7 +344,7 @@
 
 - (void)adjustContentOffset:(UIScrollView *)scrollView {
     
-    NSInteger page = (NSInteger)((scrollView.contentOffset.x + 5) / scrollView.bounds.size.width);
+    NSInteger page = (NSInteger)((scrollView.contentOffset.x) / scrollView.bounds.size.width);
     
     if (page == 0) { // 滚动到左边，自动调整到倒数第二
         
